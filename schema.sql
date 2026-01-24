@@ -18,20 +18,18 @@ SET dados = '{
     ]
   },
   "modulos": [
-    {"cod": "MFRO-1.2-BF-144-585W", "desc": "Ronma 585W N-Type Bifacial", "custo_kit": 510.54, "wp": 585},
+    {"cod": "MFHN-1.2-MO-120-465W", "desc": "Honor 465W N-Type", "custo_kit": 405.80, "wp": 465},
     {"cod": "MFMA-1.3-BF-115-540W", "desc": "Maxeon 540W PERC Bifacial", "custo_kit": 513.00, "wp": 540},
     {"cod": "MFMA-1.3-BF-115-545W", "desc": "Maxeon 545W PERC Bifacial", "custo_kit": 517.75, "wp": 545},
-    {"cod": "MFGK-1.2-BF-132-605W", "desc": "Gokin 605W N-Type Bifacial", "custo_kit": 527.98, "wp": 605},
-    {"cod": "MFRO-1.2-BF-132-610W", "desc": "Ronma 610W N-Type Bifacial", "custo_kit": 532.34, "wp": 610},
-    {"cod": "MFSP-0.3-BF-132-610W", "desc": "Solar N Plus 610W (Compósito)", "custo_kit": 535.00, "wp": 610},
-    {"cod": "MFTC-1.2-BF-132-610W", "desc": "TCL Solar 610W N-Type Bifacial", "custo_kit": 532.34, "wp": 610},
-    {"cod": "MFTC-1.2-BF-132-620W", "desc": "TCL Solar 620W N-Type Bifacial", "custo_kit": 541.07, "wp": 620},
-    {"cod": "MFRI-1.4-HJ-132-700W", "desc": "Risen 700W HJT Bifacial", "custo_kit": 616.00, "wp": 700},
+    {"cod": "MFAS-1.4-BF-144-580W", "desc": "Astronergy 580W N-Type Bifacial", "custo_kit": 506.10, "wp": 580},
+    {"cod": "MFRO-1.2-BF-144-585W", "desc": "Ronma 585W N-Type Bifacial", "custo_kit": 510.54, "wp": 585},
     {"cod": "MFAS-1.4-BF-132-605W", "desc": "Astronergy 605W N-Type Bifacial", "custo_kit": 527.98, "wp": 605},
+    {"cod": "MFTC-1.2-BF-132-610W", "desc": "TCL Solar 610W N-Type Bifacial", "custo_kit": 532.34, "wp": 610},
     {"cod": "MFJA-1.5-BF-132-615W", "desc": "JA Solar 615W N-Type Bifacial", "custo_kit": 536.70, "wp": 615},
+    {"cod": "MFTC-1.2-BF-132-620W", "desc": "TCL Solar 620W N-Type Bifacial", "custo_kit": 541.07, "wp": 620},
     {"cod": "MFJA-1.4-BF-132-625W", "desc": "JA Solar 625W N-Type Bifacial", "custo_kit": 545.43, "wp": 625},
-    {"cod": "MFTR-1.4-BF-132-715W", "desc": "Trina 715W N-Type Bifacial", "custo_kit": 624.04, "wp": 715},
-    {"cod": "MFRI-1.4-HJ-132-715W", "desc": "Risen 715W HJT Bifacial", "custo_kit": 629.20, "wp": 715}
+    {"cod": "MFHN-1.2-MO-132-700W", "desc": "Honor 700W Topcon Monofacial", "custo_kit": 610.90, "wp": 700},
+    {"cod": "MFTR-1.4-BF-132-715W", "desc": "Trina 715W N-Type Bifacial", "custo_kit": 624.04, "wp": 715}
   ],
   "inversores_huawei": [
     {"cod": "INVHW-MO-220V-3KW", "mod": "SUN2000-3KTL-L1", "nom": 3000, "mppt": 1, "tipo": "monofásico", "custo_kit": 1831.26},

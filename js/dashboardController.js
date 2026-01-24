@@ -335,12 +335,12 @@ function renderizarPremissas(container) {
             precoCombustivel: 6.29, consumoVeiculo: 8.7, kmSuprimentos: 12, adicionalLogistica: 20
         },
         precificacaoKit: {
-            // Calibração (Amostras 4.2kWp e 25.2kWp) - Desconto parece ser ~6.6% flat.
-            fatorModuloSmall: 0.934,  // Fator de Desconto (< 5.5 kWp)
-            fatorModuloMedium: 0.934, // Fator de Desconto (5.5-15 kWp)
-            fatorModuloLarge: 0.925,  // Fator de Desconto (> 15 kWp) - Ajuste fino para fechar gap de preço
+            // Calibração (Ref. Jan/2026 - Amostra 4.32kWp)
+            fatorModuloSmall: 0.818,  // Fator de Desconto (< 5.5 kWp)
+            fatorModuloMedium: 0.818, // Fator de Desconto (5.5-15 kWp)
+            fatorModuloLarge: 0.810,  // Fator de Desconto (> 15 kWp)
             freteMinimo: 450.00,      // Base de Frete (R$)
-            fretePorKwp: 111.10       // Variável de Frete (R$/kWp) - Recalibrado (Ref. 41kWp)
+            fretePorKwp: 144.00       // Variável de Frete (R$/kWp)
         },
         tabelas: {
             materiais: [
@@ -359,7 +359,7 @@ function renderizarPremissas(container) {
 
     // Migration: Garante que a estrutura de precificação exista se o banco for antigo
     if (!config.precificacaoKit) {
-        config.precificacaoKit = { fatorModuloSmall: 0.934, fatorModuloMedium: 0.934, fatorModuloLarge: 0.925, freteMinimo: 450.00, fretePorKwp: 111.10 };
+        config.precificacaoKit = { fatorModuloSmall: 0.818, fatorModuloMedium: 0.818, fatorModuloLarge: 0.810, freteMinimo: 450.00, fretePorKwp: 144.00 };
     }
 
     // GERAÇÃO DAS OPÇÕES DE OVERSIZING (COMBOBOX)
@@ -385,11 +385,11 @@ function renderizarPremissas(container) {
             <div class="col-12" style="margin-top: 20px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
                 <h4 style="color: var(--primaria); font-size: 0.9rem; margin-bottom: 10px;"><i class="fas fa-robot"></i> Calibração do Robô (Engenharia Reversa)</h4>
             </div>
-            <div class="form-group"><label>Fator Módulo (< 5.5kWp)</label><input type="number" id="p_fator_mod_small" value="${config.precificacaoKit.fatorModuloSmall || 0.934}" step="0.001" class="input-estilizado"></div>
-            <div class="form-group"><label>Fator Módulo (5.5-15kWp)</label><input type="number" id="p_fator_mod_medium" value="${config.precificacaoKit.fatorModuloMedium || 0.934}" step="0.001" class="input-estilizado"></div>
-            <div class="form-group"><label>Fator Módulo (> 15kWp)</label><input type="number" id="p_fator_mod_large" value="${config.precificacaoKit.fatorModuloLarge || 0.925}" step="0.001" class="input-estilizado"></div>
+            <div class="form-group"><label>Fator Módulo (< 5.5kWp)</label><input type="number" id="p_fator_mod_small" value="${config.precificacaoKit.fatorModuloSmall || 0.818}" step="0.001" class="input-estilizado"></div>
+            <div class="form-group"><label>Fator Módulo (5.5-15kWp)</label><input type="number" id="p_fator_mod_medium" value="${config.precificacaoKit.fatorModuloMedium || 0.818}" step="0.001" class="input-estilizado"></div>
+            <div class="form-group"><label>Fator Módulo (> 15kWp)</label><input type="number" id="p_fator_mod_large" value="${config.precificacaoKit.fatorModuloLarge || 0.810}" step="0.001" class="input-estilizado"></div>
             <div class="form-group"><label>Frete Base (R$)</label><input type="number" id="p_frete_min" value="${config.precificacaoKit.freteMinimo || 450}" step="0.01" class="input-estilizado"></div>
-            <div class="form-group"><label>Frete Var. (R$/kWp)</label><input type="number" id="p_frete_var" value="${config.precificacaoKit.fretePorKwp || 111.10}" step="0.01" class="input-estilizado"></div>
+            <div class="form-group"><label>Frete Var. (R$/kWp)</label><input type="number" id="p_frete_var" value="${config.precificacaoKit.fretePorKwp || 144.00}" step="0.01" class="input-estilizado"></div>
         `;
         // Adiciona ao final do grid de inputs financeiros ou cria um novo container se necessário
         // Simplificação: Adiciona ao final do container principal de premissas se o grid não for o ideal
@@ -480,11 +480,11 @@ window.salvarNovasPremissas = function() {
             adicionalLogistica: parseFloat(document.getElementById('p_adicional_logistica').value) || 20
         },
         precificacaoKit: {
-            fatorModuloSmall: parseFloat(document.getElementById('p_fator_mod_small')?.value) || 0.934,
-            fatorModuloMedium: parseFloat(document.getElementById('p_fator_mod_medium')?.value) || 0.934,
-            fatorModuloLarge: parseFloat(document.getElementById('p_fator_mod_large')?.value) || 0.925,
+            fatorModuloSmall: parseFloat(document.getElementById('p_fator_mod_small')?.value) || 0.818,
+            fatorModuloMedium: parseFloat(document.getElementById('p_fator_mod_medium')?.value) || 0.818,
+            fatorModuloLarge: parseFloat(document.getElementById('p_fator_mod_large')?.value) || 0.810,
             freteMinimo: parseFloat(document.getElementById('p_frete_min')?.value) || 450.00,
-            fretePorKwp: parseFloat(document.getElementById('p_frete_var')?.value) || 111.10
+            fretePorKwp: parseFloat(document.getElementById('p_frete_var')?.value) || 144.00
         },
         materiaisPremium: {
             va_diaria_instalador: parseFloat(document.getElementById('va_diaria_instalador').value) || 0,
@@ -869,11 +869,11 @@ window.limparProjetosDuplicados = async function() {
  */
 window.calcularCustoKitFornecedor = function(itens, config) {
     const params = config.precificacaoKit || {};
-    const FATOR_MOD_SMALL = params.fatorModuloSmall || 0.934;
-    const FATOR_MOD_MEDIUM = params.fatorModuloMedium || 0.934;
-    const FATOR_MOD_LARGE = params.fatorModuloLarge || 0.925;
+    const FATOR_MOD_SMALL = params.fatorModuloSmall || 0.818;
+    const FATOR_MOD_MEDIUM = params.fatorModuloMedium || 0.818;
+    const FATOR_MOD_LARGE = params.fatorModuloLarge || 0.810;
     const FRETE_MIN = params.freteMinimo || 450.00;
-    const FRETE_VAR = params.fretePorKwp || 111.10;
+    const FRETE_VAR = params.fretePorKwp || 144.00;
 
     let totalKwp = 0;
     let custoModulos = 0;

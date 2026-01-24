@@ -352,9 +352,9 @@ export function calcularCustoKit(modulos, inversores, isPremium = false, tipoRed
     const params = premissas?.precificacaoKit || {};
     
     // A. Fatores de Correção (Margem do Fornecedor por Faixa)
-    const FATOR_SMALL = params.fatorModuloSmall || 0.934;  // < 5.5 kWp
-    const FATOR_MEDIUM = params.fatorModuloMedium || 0.934; // 5.5 - 15 kWp
-    const FATOR_LARGE = params.fatorModuloLarge || 0.925;  // > 15 kWp
+    const FATOR_SMALL = params.fatorModuloSmall || 0.818;  // < 5.5 kWp (Recalibrado)
+    const FATOR_MEDIUM = params.fatorModuloMedium || 0.818; // 5.5 - 15 kWp
+    const FATOR_LARGE = params.fatorModuloLarge || 0.810;  // > 15 kWp
 
     let fatorAplicado = 1.0;
     if (potenciaTotalKWp <= 5.5) fatorAplicado = FATOR_SMALL;
@@ -367,7 +367,7 @@ export function calcularCustoKit(modulos, inversores, isPremium = false, tipoRed
 
     // B. Cálculo de Frete Logístico (Curva Logística)
     const FRETE_MIN = params.freteMinimo || 450.00;
-    const FRETE_VAR = params.fretePorKwp || 111.10;
+    const FRETE_VAR = params.fretePorKwp || 144.00; // Recalibrado para R$ 1072 em 4.32kWp
     
     let valorFrete = 0;
     if (potenciaTotalKWp > 0) {

@@ -539,57 +539,102 @@ body {
 }
 
 /* ====================================================================== */
-/* COMPONENTES: TABELAS                                                   */
+/* COMPONENTES: TABELAS (TRADICIONAL)                                     */
 /* ====================================================================== */
 
 .tabela-container, .tabela-scroll-engenharia {
     overflow-x: auto;
     border: 1px solid var(--borda-suave);
     border-radius: var(--radius-md);
-    max-height: 390px; /* Ajustado para garantir header + ~6 linhas visíveis (50% a mais) */
+    background: #FFFFFF;
+    max-height: 500px; /* Altura controlada */
     overflow-y: auto;
 }
 
-.tabela-gestao, .tabela-tecnica, .tabela-transversal, .tabela-sugestoes {
+.tabela-gestao, .tabela-tecnica, .tabela-transversal, .tabela-sugestoes, .tabela-projetos, .tabela-propostas {
     width: 100%;
     border-collapse: collapse;
     font-size: var(--font-sm);
 }
 
-.tabela-gestao th, .tabela-tecnica th, .tabela-transversal th, .tabela-sugestoes th {
+.tabela-gestao thead, .tabela-tecnica thead, .tabela-transversal thead, .tabela-sugestoes thead, .tabela-projetos thead, .tabela-propostas thead {
+    display: table-header-group !important;
+}
+
+.tabela-gestao th, .tabela-tecnica th, .tabela-transversal th, .tabela-sugestoes th, .tabela-projetos th, .tabela-propostas th {
     background-color: #F8FAFC;
     color: var(--texto-apoio);
     font-weight: 600;
     text-transform: uppercase;
     font-size: 0.65rem;
-    padding: 8px 12px;
+    padding: 12px 16px;
     text-align: left;
     border-bottom: 1px solid var(--borda-suave);
-}
-
-.tabela-gestao th, .tabela-tecnica th, .tabela-transversal th, .tabela-sugestoes th {
     position: sticky;
     top: 0;
-    z-index: 1;
+    z-index: 10;
 }
 
-.tabela-gestao td, .tabela-tecnica td, .tabela-transversal td, .tabela-sugestoes td {
-    padding: 8px 12px;
+.tabela-gestao tbody, .tabela-tecnica tbody, .tabela-transversal tbody, .tabela-sugestoes tbody, .tabela-projetos tbody, .tabela-propostas tbody {
+    display: table-row-group;
+}
+
+.tabela-gestao tr, .tabela-tecnica tr, .tabela-transversal tr, .tabela-sugestoes tr, .tabela-projetos tr, .tabela-propostas tr {
+    display: table-row;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+}
+
+.tabela-gestao tbody tr:hover, .tabela-tecnica tbody tr:hover, .tabela-transversal tbody tr:hover, .tabela-sugestoes tbody tr:hover, .tabela-projetos tbody tr:hover, .tabela-propostas tbody tr:hover {
+    background-color: #F1F5F9;
+    transform: none;
+    box-shadow: none;
+}
+
+.tabela-gestao td, .tabela-tecnica td, .tabela-transversal td, .tabela-sugestoes td, .tabela-projetos td, .tabela-propostas td {
+    display: table-cell;
+    padding: 12px 16px;
     border-bottom: 1px solid var(--borda-suave);
     color: var(--texto-corpo);
+    font-size: 0.75rem !important; /* Padronização forçada */
     vertical-align: middle;
+    background-color: transparent;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid var(--borda-suave);
 }
 
-.tabela-gestao tr:last-child td { border-bottom: none; }
-.tabela-gestao tr:hover, .tabela-transversal tr:hover { background-color: #F8FAFC; }
+/* Tenta recuperar o Label via atributo data-label (se existir no HTML) */
+.tabela-gestao td::before, .tabela-tecnica td::before, .tabela-transversal td::before, .tabela-sugestoes td::before, .tabela-projetos td::before, .tabela-propostas td::before {
+    display: none;
+}
+
+/* Reset Actions Column */
+.tabela-gestao td:last-child, .tabela-tecnica td:last-child, .tabela-transversal td:last-child, .tabela-sugestoes td:last-child, .tabela-projetos td:last-child, .tabela-propostas td:last-child {
+    position: static;
+    opacity: 1;
+    pointer-events: auto;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--borda-suave);
+    padding: 12px 16px;
+    margin: 0;
+    display: table-cell;
+    text-align: right;
+    box-shadow: none;
+}
 
 .btn-icon {
     border: none;
     background: transparent;
     color: var(--texto-apoio);
     cursor: pointer;
-    padding: 4px;
-    font-size: 0.9rem;
+    padding: 6px;
+    font-size: 1rem;
     transition: color 0.2s;
 }
 .btn-icon:hover { color: var(--primaria); }
@@ -607,22 +652,22 @@ body {
 
 .card-indicador {
     background: var(--bg-card);
-    padding: 16px;
+    padding: 12px 16px;
     border-radius: var(--radius-lg);
     border: 1px solid var(--borda-suave);
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
 .icon-indicador {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.1rem;
+    font-size: 1rem;
     background-color: var(--primaria-light);
     color: var(--primaria);
     transition: all 0.3s ease;
@@ -634,7 +679,7 @@ body {
 
 .info-indicador span {
     display: block;
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: var(--texto-apoio);
     font-weight: 600;
     text-transform: uppercase;
@@ -646,7 +691,7 @@ body {
 }
 
 .info-indicador strong {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     color: var(--texto-header);
     font-weight: 700;
     line-height: 1.2;
@@ -2036,13 +2081,6 @@ select.input-estilizado {
         border-left: none;
         border-right: none;
         border-radius: 0;
-    }
-    
-    .tabela-gestao th, .tabela-tecnica th, .tabela-transversal th, .tabela-sugestoes th,
-    .tabela-gestao td, .tabela-tecnica td, .tabela-transversal td, .tabela-sugestoes td {
-        padding: 8px 6px;
-        font-size: 0.7rem;
-        white-space: nowrap; /* Força scroll horizontal limpo */
     }
 
     /* Formulários e Cards */
