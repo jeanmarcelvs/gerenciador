@@ -1734,3 +1734,349 @@ select.input-estilizado {
     text-shadow: none !important;
     border-color: var(--borda-suave) !important;
 }
+
+/* ====================================================================== */
+/* 📱 RESPONSIVIDADE AVANÇADA (MOBILE & TABLET)                           */
+/* ====================================================================== */
+
+@media (max-width: 1024px) {
+    /* Ajustes para Tablets e Notebooks pequenos */
+    .sidebar-engenharia {
+        width: 70px; /* Sidebar recolhida (ícones apenas) */
+        padding: 10px 5px;
+    }
+    
+    .sidebar-engenharia .item-menu {
+        justify-content: center;
+        padding: 10px 0;
+    }
+    
+    .sidebar-engenharia .item-menu span {
+        display: none; /* Esconde texto */
+    }
+    
+    .sidebar-engenharia .logo-area {
+        padding: 0 5px;
+        justify-content: center;
+    }
+    
+    .sidebar-engenharia .logo-area img {
+        max-height: 24px;
+    }
+    
+    .area-trabalho-engenharia {
+        padding: 0 15px 40px 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Layout Geral Mobile */
+    .app-container {
+        flex-direction: column;
+        height: 100vh; /* Mantém viewport height */
+        overflow: hidden;
+    }
+
+    .sidebar-engenharia {
+        width: 100%;
+        height: 60px; /* Altura fixa para barra inferior */
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 5px;
+        border-right: none;
+        border-top: 1px solid #1E293B;
+        border-bottom: none;
+        order: 2; /* Joga para baixo (Bottom Navigation) */
+        justify-content: space-around;
+        background-color: var(--bg-sidebar);
+        z-index: 1000;
+        flex-shrink: 0;
+    }
+    
+    .sidebar-engenharia .logo-area {
+        display: none; /* Remove logo na barra inferior */
+    }
+    
+    .menu-principal {
+        flex-direction: row;
+        padding: 0;
+        gap: 0;
+        width: 100%;
+        justify-content: space-around;
+        overflow: visible;
+    }
+    
+    .item-menu {
+        flex-direction: column;
+        gap: 2px;
+        padding: 4px;
+        font-size: 0.65rem;
+        text-align: center;
+        border-radius: 8px;
+        width: auto;
+        flex: 1;
+        justify-content: center;
+    }
+    
+    .item-menu i {
+        font-size: 1.1rem;
+        margin: 0;
+    }
+    
+    .item-menu span {
+        display: block; /* Mostra texto pequeno */
+        font-size: 0.6rem;
+        line-height: 1;
+    }
+    
+    .sidebar-engenharia .item-menu.active {
+        border-left: none;
+        border-top: 3px solid var(--borda-forte); /* Marcador no topo */
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .user-info-area {
+        display: none;
+    }
+
+    .main-panel {
+        width: 100%;
+        height: calc(100vh - 60px); /* Restante da tela */
+        flex: 1;
+        order: 1;
+    }
+    
+    .header-principal {
+        padding: 0 15px;
+        height: 50px;
+    }
+
+    .conteudo-principal {
+        padding: 15px;
+        padding-bottom: 80px; /* Espaço extra para scroll */
+    }
+
+    /* Header Fixo do Gerador */
+    .header-engenharia-fixo {
+        position: sticky;
+        top: 0;
+        height: auto;
+        min-height: 52px;
+        padding: 8px 15px;
+        flex-wrap: wrap;
+        z-index: 90;
+    }
+    
+    .header-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        width: 100%;
+    }
+    
+    .header-engenharia-fixo .logo-area {
+        justify-content: center;
+        margin-bottom: 5px;
+    }
+    
+    .vitals-monitor {
+        justify-content: space-between;
+        width: 100%;
+        background: rgba(0,0,0,0.2);
+        padding: 5px;
+        border-radius: 6px;
+    }
+    
+    .divider-v {
+        display: none;
+    }
+    
+    .vital-item {
+        align-items: center;
+        text-align: center;
+    }
+
+    /* Contexto Bar */
+    .contexto-projeto-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 15px;
+    }
+    
+    .ctx-divider { display: none; }
+    .ctx-item { 
+        width: 100%; 
+        flex-direction: row; 
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #E2E8F0; 
+        padding-bottom: 8px; 
+    }
+    .ctx-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    /* Grids e Formulários */
+    .grid-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .col-4, .col-6, .col-8, .col-12 { width: 100%; }
+    
+    .linha-orientacao {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding-bottom: 15px;
+        height: auto;
+    }
+    
+    .btn-remover-linha {
+        position: static;
+        width: 100%;
+        margin-top: 5px;
+        height: 40px;
+        justify-content: center;
+    }
+    
+    .btn-remover-linha::after {
+        content: " Remover Orientação";
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-left: 5px;
+    }
+
+    /* Resumo Final */
+    .grid-resumo-final {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    
+    .item-resumo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px dashed var(--borda-suave);
+        padding: 10px 0;
+    }
+    .item-resumo:last-child { border-bottom: none; }
+
+    /* Botões de Ação */
+    .botoes-fluxo {
+        flex-direction: column-reverse;
+        gap: 12px;
+        padding-bottom: 20px;
+    }
+    
+    .botoes-fluxo button, .btn-nav-wizard {
+        width: 100%;
+        justify-content: center;
+        height: 44px; /* Touch target maior */
+    }
+    
+    /* Wizard Steps */
+    .menu-etapas-container {
+        flex-direction: column;
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .lista-etapas-scroll {
+        width: 100%;
+        padding-bottom: 5px;
+        justify-content: flex-start;
+    }
+    
+    .nav-etapa-container {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* Tabelas */
+    .tabela-container {
+        max-height: none;
+    }
+    
+    /* Ajustes de Texto */
+    h1, h2 { font-size: 1.2rem !important; }
+    h3 { font-size: 1.1rem !important; }
+    
+    /* Cards */
+    .card-modulo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Ajuste HSP (Horas de Sol) para não quebrar */
+    .hsp-display-luxe {
+        height: auto;
+        min-height: 36px;
+        flex-wrap: wrap;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Ajustes Ultra-Compactos (< 480px) */
+    
+    /* Container principal com menos padding */
+    .conteudo-principal, .area-trabalho-engenharia {
+        padding: 10px;
+        padding-bottom: 80px;
+    }
+
+    /* Tabelas: Expansão lateral (Bleed) e compactação */
+    .tabela-container, .tabela-scroll-engenharia {
+        margin-left: -10px;
+        margin-right: -10px;
+        width: calc(100% + 20px);
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+    }
+    
+    .tabela-gestao th, .tabela-tecnica th, .tabela-transversal th, .tabela-sugestoes th,
+    .tabela-gestao td, .tabela-tecnica td, .tabela-transversal td, .tabela-sugestoes td {
+        padding: 8px 6px;
+        font-size: 0.7rem;
+        white-space: nowrap; /* Força scroll horizontal limpo */
+    }
+
+    /* Formulários e Cards */
+    .card-tecnico, .secao-config {
+        padding: 12px;
+    }
+    
+    /* Botões Full Width */
+    .btn-primary, .btn-secundario, .btn-perigo, .btn-visualizar {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 8px;
+    }
+    
+    /* Visualização de Proposta */
+    .total-geral-proposta {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+    }
+
+    /* Painel Financeiro (Cascata) */
+    .linha-custo {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        padding: 8px 0;
+    }
+    .linha-custo span:first-child {
+        font-weight: 600;
+        color: var(--texto-header);
+        margin-bottom: 2px;
+    }
+    
+    /* Ajuste de Inputs */
+    .grid-inputs { grid-template-columns: 1fr; }
+}
