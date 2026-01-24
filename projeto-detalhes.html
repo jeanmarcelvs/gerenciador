@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes do Projeto | BelEnergy</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Detalhes do Projeto</title>
     <link rel="stylesheet" href="css/engenharia.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="theme-acessivel">
-    <main class="area-trabalho-engenharia" style="max-width: 1200px; margin: auto; padding-top: 50px;">
+<body class="bg-light">
+    <main class="area-trabalho-engenharia">
         <div class="card-tecnico">
             <div class="header-modulo">
                 <div>
-                    <small style="color: var(--primaria); font-weight: 700;">PROJETO ATIVO</small>
-                    <h2 id="titulo-projeto" style="margin-top: 5px;">
-                        <i class="fas fa-project-diagram"></i> Detalhes do Projeto
+                    <h2 style="margin-top: 5px;">
+                        <i class="fas fa-project-diagram"></i> Dados do Projeto
                     </h2>
                 </div>
                 <button class="btn-secundario" onclick="window.location.href='dashboard-admin.html'">
@@ -25,7 +23,15 @@
             </div>
 
             <!-- Informações do Projeto -->
-            <div class="grid-inputs" style="background: #f8fafc; padding: 25px; border-radius: 12px; margin-bottom: 40px;">
+            <div class="grid-form" style="margin-bottom: 20px;">
+                <div class="form-group col-12">
+                    <label>Nome do Projeto</label>
+                    <input type="text" id="detalhe_nome_projeto" readonly class="input-monitorado input-heranca" style="font-weight: 600; color: #0f172a;">
+                </div>
+                <div class="form-group col-4">
+                    <label>ID do Projeto</label>
+                    <input type="text" id="detalhe_id_projeto" readonly class="input-monitorado input-heranca" style="font-family: monospace; font-size: 0.85rem;">
+                </div>
                 <div class="form-group col-4">
                     <label>Cliente</label>
                     <input type="text" id="detalhe_cliente_nome" readonly class="input-monitorado input-heranca">
@@ -42,6 +48,10 @@
                     <label>Estrutura</label>
                     <input type="text" id="detalhe_estrutura" readonly class="input-monitorado input-heranca">
                 </div>
+                <div class="form-group col-4">
+                    <label>Origem da Venda</label>
+                    <input type="text" id="detalhe_origem" readonly class="input-monitorado input-heranca">
+                </div>
             </div>
 
             <!-- Lista de Propostas -->
@@ -57,9 +67,11 @@
             <table class="tabela-tecnica">
                 <thead>
                     <tr>
-                        <th>Data de Emissão</th>
-                        <th>Potência Sistema</th>
-                        <th>Investimento Total</th>
+                        <th>Atualização</th>
+                        <th>Validade</th>
+                        <th>Potência</th>
+                        <th>Geração (Est. / Max)</th>
+                        <th>Valor (Std / Prm)</th>
                         <th>Ações</th>
                     </tr>
                 </thead>

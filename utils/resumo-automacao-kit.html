@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo - Automação Belenus</title>
+    <style>
+        :root {
+            --primary: #003366;
+            --secondary: #00509d;
+            --accent: #f39c12;
+            --text: #333;
+            --bg: #f4f7f6;
+            --white: #ffffff;
+            --border: #dcdde1;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.5; color: var(--text); background: var(--bg); margin: 0; padding: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; background: var(--white); padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 10px; }
+        
+        header { border-bottom: 4px solid var(--primary); margin-bottom: 40px; padding-bottom: 20px; }
+        h1 { color: var(--primary); font-size: 28px; margin: 0; }
+        h2 { color: var(--secondary); border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-top: 40px; text-transform: uppercase; font-size: 20px; }
+        h3 { color: var(--accent); margin-top: 25px; font-size: 18px; }
+
+        .highlight-box { background: #e8f4fd; border-left: 5px solid var(--secondary); padding: 20px; margin: 20px 0; border-radius: 0 5px 5px 0; }
+        .formula-box { background: #2f3640; color: #f5f6fa; padding: 25px; border-radius: 8px; font-family: 'Consolas', monospace; overflow-x: auto; margin: 20px 0; border: 1px solid #1e272e; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 14px; }
+        th { background-color: var(--primary); color: white; padding: 12px; text-align: left; }
+        td { border: 1px solid var(--border); padding: 10px; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        tr:hover { background-color: #f1f1f1; }
+
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; color: white; margin-bottom: 10px; }
+        .badge-small { background: #27ae60; }
+        .badge-medium { background: #2980b9; }
+        .badge-large { background: #8e44ad; }
+
+        .note { font-style: italic; color: #7f8c8d; border-top: 1px solid #eee; padding-top: 10px; margin-top: 20px; }
+        .page-break { margin: 60px 0; border-top: 2px dashed #ccc; position: relative; }
+        .page-break::after { content: "Fim da Seção / Dados Extraídos"; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: white; padding: 0 10px; color: #999; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>RELATÓRIO TÉCNICO E ESTRUTURAL DE AUTOMAÇÃO</h1>
+        <p><strong>Projeto:</strong> Integração e Replicação de Precificação Belenus</p>
+        <p><strong>Engenheiro Responsável:</strong> Jean Marcel</p>
+    </header>
+
+    <section>
+        <h2>1. Diagnóstico e Problema Central</h2>
+        <p>O objetivo é automatizar o acesso à plataforma Belenus para replicar fielmente os preços de kits personalizados, eliminando a discrepância atual de <b>~30%</b> identificada em kits de pequeno porte.</p>
+        
+        <div class="highlight-box">
+            <strong>Desvio Detectado:</strong> 
+            <ul>
+                <li>Cálculo Atual: R$ 6.687,20</li>
+                <li>Preço Real (Belenus): R$ 8.704,76</li>
+                <li><strong>Gap:</strong> R$ 2.017,56 (Necessita ajuste de motor)</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>2. Plano de Ajuste da Engine (model.js)</h2>
+        <p>A transição do modelo de "Soma de Custos Unitários" para "Modelo de Base Calibrada por Fatores".</p>
+
+        <h3>Antiga Lógica:</h3>
+        <div class="formula-box">
+            total = custoMod + custoInv + custoEst + custoProt + frete;
+        </div>
+
+        <h3>Nova Lógica Recomendada:</h3>
+        <div class="formula-box">
+            total = (baseKitCalibrada * fatorFaixaKwp * fatorLogistico * fatorComplexidade) * fatorPremium;
+        </div>
+
+        <h3>Coeficientes de Mercado (Ajuste Psicológico/Comercial):</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Faixa de Potência (kWp)</th>
+                    <th>Coeficiente Kit (Sugerido)</th>
+                    <th>Justificativa Técnica</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Até 3 kWp</td>
+                    <td>1.32</td>
+                    <td>Baixa diluição de frete e custos fixos.</td>
+                </tr>
+                <tr>
+                    <td>3 a 5 kWp</td>
+                    <td>1.28</td>
+                    <td>Transição de entrada (Entry Level).</td>
+                </tr>
+                <tr>
+                    <td>5 a 10 kWp</td>
+                    <td>1.24</td>
+                    <td>Kits médios com inversor monofásico.</td>
+                </tr>
+                <tr>
+                    <td>10 a 20 kWp</td>
+                    <td>1.19</td>
+                    <td>Ganho de escala industrial.</td>
+                </tr>
+                <tr>
+                    <td>Acima de 20 kWp</td>
+                    <td>1.15</td>
+                    <td>Eficiência máxima de logística e impostos.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <div class="page-break"></div>
+
+    <section>
+        <h2>3. Base de Dados de Referência (Amostras Reais)</h2>
+        <p>Amostras extraídas para calibração do sistema (Exemplos de Arapiraca/AL e Região):</p>
+
+        <span class="badge badge-small">YELLOW - FAIXA SMALL (Até 5,5 kWp)</span>
+        <table>
+            <thead>
+                <tr>
+                    <th>Kit #</th>
+                    <th>kWp Aprox.</th>
+                    <th>Qtd Módulos</th>
+                    <th>Inversor (Modelo)</th>
+                    <th>Fase</th>
+                    <th>Status PDF</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>~1,4</td>
+                    <td>2 (620-700W)</td>
+                    <td>SUN2000-2KTL-L1</td>
+                    <td>Mono</td>
+                    <td>Validado</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>~2,8</td>
+                    <td>4 (620-700W)</td>
+                    <td>SUN2000-3KTL-L1</td>
+                    <td>Mono</td>
+                    <td>Validado</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>~4,2</td>
+                    <td>6 (620-700W)</td>
+                    <td>SUN2000-3KTL-L1</td>
+                    <td>Mono</td>
+                    <td>Validado</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <span class="badge badge-medium">YELLOW - FAIXA MEDIUM (5,5 a 15 kWp)</span>
+        <table>
+            <thead>
+                <tr>
+                    <th>Kit #</th>
+                    <th>kWp Aprox.</th>
+                    <th>Qtd Módulos</th>
+                    <th>Inversor (Modelo)</th>
+                    <th>Fase</th>
+                    <th>Nota de Desconto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>4</td>
+                    <td>~6,6</td>
+                    <td>10</td>
+                    <td>SUN2000-6KTL-L1</td>
+                    <td>Mono</td>
+                    <td>Desconto real ≈ 4-5%</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>~8,1</td>
+                    <td>12</td>
+                    <td>SUN2000-8K-LC0</td>
+                    <td>Mono</td>
+                    <td>Infra diluída</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>~12,4</td>
+                    <td>18</td>
+                    <td>SUN2000-12K-MB0</td>
+                    <td>Trifásico</td>
+                    <td>Mudança de padrão prot.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <span class="badge badge-large">BLUE - FAIXA LARGE (15 a 30 kWp)</span>
+        <table>
+            <thead>
+                <tr>
+                    <th>Kit #</th>
+                    <th>kWp Aprox.</th>
+                    <th>Inversor</th>
+                    <th>Módulos</th>
+                    <th>Fase</th>
+                    <th>Observação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>8</td>
+                    <td>~18,6</td>
+                    <td>SUN2000-20K</td>
+                    <td>30x 620W N-Type</td>
+                    <td>Trifásico</td>
+                    <td>Erro de motor < 3%</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>~24,8</td>
+                    <td>SUN2000-25K</td>
+                    <td>40x 620W N-Type</td>
+                    <td>Trifásico</td>
+                    <td>Precisão Máxima</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>4. Implementação Técnica (Auto-Calibração)</h2>
+        <p>A estrutura abaixo deve ser implementada no <strong>Cloudflare D1</strong> para garantir que o sistema aprenda com novos PDFs carregados.</p>
+        
+        <div class="formula-box">
+            -- Tabela de Parâmetros Ativos<br>
+            CREATE TABLE parametros_calibracao (<br>
+                id INTEGER PRIMARY KEY,<br>
+                faixa_kwp REAL,<br>
+                fator_ajuste REAL DEFAULT 1.0,<br>
+                last_update DATETIME<br>
+            );<br><br>
+            -- Lógica de Ajuste (Media Móvel)<br>
+            fatorCalibracao = media (preco_real_pdf / preco_calculado_engine);
+        </div>
+    </section>
+
+    <footer class="note">
+        Este HTML contém a consolidação técnica de todos os arquivos de automação (Resumo e Detalhamento de 80 páginas). 
+        Gerado para uso em desenvolvimento de sistemas de engenharia fotovoltaica.
+    </footer>
+</div>
+
+</body>
+</html>

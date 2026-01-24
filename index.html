@@ -1,50 +1,38 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta de Proposta | BelEnergy</title>
-    <link rel="stylesheet" href="css/style.css">
-
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Acesso Restrito</title>
+    <link rel="stylesheet" href="css/engenharia.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-
-<body class="theme-premium body-centralizado">
-
+<body class="body-login bg-light">
     <div class="background-animation"></div>
 
-    <div id="loading-overlay" class="loading-overlay oculto">
-        <div class="spinner"></div>
-    </div>
+    <main class="container-login">
+        <img src="imagens/Logo_Jean_Marcel.webp" alt="BelEnergy" class="logo-login">
+        
+        <h1>Gestão de Engenharia</h1>
+        
+        <form id="form-login-restrito" class="form-container">
+            <div class="input-group">
+                <label>Usuário</label>
+                <input type="text" id="usuario_admin" class="input-estilizado" placeholder="Seu usuário" required>
+            </div>
+            <div class="input-group">
+                <label>Chave de Acesso</label>
+                <input type="password" id="senha_admin" class="input-estilizado" placeholder="Sua senha" required>
+            </div>
+            
+            <button type="submit" id="btn-entrar" class="btn-primary">
+                <span class="btn-texto">Acessar Painel</span>
+            </button>
+            <div id="login-feedback" class="mensagem-feedback"></div>
+        </form>
+    </main>
 
-    <div class="container-centralizado">
-
-        <main class="container container-index-com-transparencia main-oculto">
-            <img src="imagens/Logo_Jean_Marcel.webp" alt="Logo da empresa BelEnergy" class="logo">
-            <h1>Consultar Proposta</h1>
-            <form id="form-consulta" class="form-container">
-                <div class="input-group">
-                    <label for="numero-projeto">Número do Projeto</label>
-                    <input type="text" id="numero-projeto" name="numero-projeto" placeholder="Ex: 1234" required>
-                </div>
-                <div class="input-group">
-                    <label for="primeiro-nome">Primeiro Nome do Cliente</label>
-                    <input type="text" id="primeiro-nome" name="primeiro-nome" placeholder="Ex: João" required>
-                </div>
-                <button id="btn-consultar" class="btn-primary">
-                    <span class="btn-texto">Consultar</span>
-                    <i class="fas fa-spinner fa-spin icone-loading"></i>
-                    <i class="fas fa-check icone-sucesso"></i>
-                    <i class="fas fa-times icone-erro"></i>
-                </button>
-                <div id="mensagem-feedback" class="mensagem-feedback"></div>
-            </form>
-        </main>
-
-    </div>
-
-    <script src="js/indexController.js" type="module"></script>
+    <script type="module" src="js/authController.js"></script>
 </body>
 </html>

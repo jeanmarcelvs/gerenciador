@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Central de Gerenciamento | BelEnergy</title>
+    <title>Central de Gerenciamento</title>
     <link rel="stylesheet" href="css/engenharia.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="theme-acessivel">
+<body class="bg-light">
     <div class="app-container">
         <!-- Sidebar de Navegação -->
         <aside class="sidebar-engenharia">
             <div class="logo-area">
-                <img src="imagens/Logo_Jean_Marcel.webp" alt="BelEnergy">
+                <img src="imagens/Logo_Jean_Marcel.webp" alt="Jean Marcel">
             </div>
             
             <nav class="menu-principal">
@@ -29,7 +29,6 @@
             </nav>
 
             <div class="user-info-area">
-                <div class="user-name">Eng. Jean Marcel</div>
                 <a href="#" onclick="logout()" class="logout-link">Sair do sistema</a>
             </div>
         </aside>
@@ -41,9 +40,10 @@
                     <!-- A logo aqui pode ser diferente ou removida, mantendo a da sidebar -->
                 </div>
 
-                <div class="info-sessao">
-                    <span>Engenheiro Responsável</span>
-                    <strong class="user-name">Jean Marcel</strong>
+                <div class="search-container-header">
+                    <i class="fas fa-search search-icon-header"></i>
+                    <input type="text" id="global_search" class="input-search-header" placeholder="Buscar clientes, projetos, propostas..." autocomplete="off">
+                    <div id="global_search_results" class="search-results-dropdown"></div>
                 </div>
             </header>
 
@@ -59,5 +59,41 @@
         }
     </script>
     <script type="module" src="./js/dashboardController.js"></script>
+
+    <!-- Script de Ajuste Visual Pós-Carregamento (Engenharia UI) -->
+    <script>
+        // Observa mudanças na área dinâmica para aplicar correções assim que o conteúdo carregar
+        const observerDashboard = new MutationObserver((mutations) => {
+            const area = document.getElementById('area_dinamica');
+            if (!area) return;
+
+            // 1. Remover Card "Potência Orçada"
+            const cards = area.querySelectorAll('.card-indicador');
+            cards.forEach(card => {
+                const texto = card.innerText || card.textContent;
+                // Verifica variações do texto para garantir a remoção
+                if (texto.includes('Potência Orçada') || texto.includes('Orçamento') || texto.includes('Potência de Ossada')) {
+                    card.style.display = 'none';
+                }
+            });
+
+            // 2. Garantir Scroll nas Tabelas (caso o JS original não adicione o container)
+            const tabelas = area.querySelectorAll('table');
+            tabelas.forEach(tabela => {
+                if (!tabela.parentElement.classList.contains('tabela-container')) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'tabela-container';
+                    tabela.parentNode.insertBefore(wrapper, tabela);
+                    wrapper.appendChild(tabela);
+                }
+            });
+        });
+
+        // Inicia o observador
+        const targetNode = document.getElementById('area_dinamica');
+        if (targetNode) {
+            observerDashboard.observe(targetNode, { childList: true, subtree: true });
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Resumo da Proposta</title>
+    <link rel="stylesheet" href="css/engenharia.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .valor-final { font-size: 2rem; color: var(--primaria); font-weight: 800; }
+        .grid-resumo-detalhado {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .info-label { color: var(--texto-apoio); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 4px; }
+        .info-valor { color: var(--texto-header); font-weight: 600; font-size: 1.1rem; margin-bottom: 10px; }
+        .badge-tecnica { background: var(--primaria-light); color: var(--primaria); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+        .container-principal { max-width: 1100px; margin: 0 auto; padding: 20px; }
+    </style>
+</head>
+<body class="bg-body">
+    <header class="header-engenharia-fixo">
+        <div class="header-container">
+            <button onclick="window.voltar()" class="btn-voltar" style="background:none; border:none; cursor:pointer; color: #94a3b8; font-weight: 600; display: flex; align-items: center; gap: 5px;">
+                <i class="fas fa-chevron-left"></i> Voltar
+            </button>
+            <div class="logo-area">
+                <h2 style="color: var(--primaria); margin:0; font-size: 1.2rem;">Resumo da Proposta</h2>
+            </div>
+
+            <button onclick="acionarEdicao()" class="btn-primario" style="background: #059669;">
+                <i class="fas fa-edit"></i> EDITAR PROPOSTA
+            </button>
+        </div>
+    </header>
+
+    <main class="container-principal" style="margin-top: 40px;">
+        <section class="card-tecnico" style="margin-bottom: 20px;">
+            <div class="secao-header"><i class="fas fa-user"></i> <span>Identificação do Cliente</span></div>
+            <div class="grid-resumo-detalhado">
+                <div>
+                    <p class="info-label">Cliente</p>
+                    <p class="info-valor" id="view_cliente_nome">---</p>
+                </div>
+                <div>
+                    <p class="info-label">Localidade</p>
+                    <p class="info-valor" id="view_localidade">---</p>
+                </div>
+                <div>
+                    <p class="info-label">ID Proposta</p>
+                    <p class="info-valor" id="view_projeto_id">#---</p>
+                </div>
+                <div>
+                    <p class="info-label">Validade</p>
+                    <p class="info-valor" id="view_validade">---</p>
+                </div>
+                <div>
+                    <p class="info-label">Data de Criação</p>
+                    <p class="info-valor" id="view_data_criacao">---</p>
+                </div>
+                <div>
+                    <p class="info-label">Última Atualização</p>
+                    <p class="info-valor" id="view_data_atualizacao">---</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-tecnico" style="margin-bottom: 20px;">
+            <div class="secao-header"><i class="fas fa-drafting-compass"></i> <span>Premissas e Engenharia</span></div>
+            <div class="grid-resumo-detalhado">
+                <div>
+                    <p class="info-label">Consumo Médio</p>
+                    <p class="info-valor" id="view_consumo">0 kWh</p>
+                </div>
+                <div>
+                    <p class="info-label">HSP (Irradiação)</p>
+                    <p class="info-valor" id="view_hsp">0.00</p>
+                </div>
+                <div>
+                    <p class="info-label">Tipo de Rede</p>
+                    <p class="info-valor"><span class="badge-tecnica" id="view_tipo_rede">---</span></p>
+                </div>
+                <div>
+                    <p class="info-label">Estrutura (Telhado)</p>
+                    <p class="info-valor" id="view_estrutura">---</p>
+                </div>
+            </div>
+            <div class="grid-resumo-detalhado" style="margin-top: 15px; border-top: 1px solid var(--borda-suave); padding-top: 15px;">
+                <div>
+                    <p class="info-label">Orientação/Inclinação</p>
+                    <p class="info-valor" id="view_geometria">---</p>
+                </div>
+                <div>
+                    <p class="info-label">Perdas Totais (PR)</p>
+                    <p class="info-valor" id="view_pr">0%</p>
+                </div>
+                <div>
+                    <p class="info-label">Potência Necessária</p>
+                    <p class="info-valor" id="view_kwp_calculado">0.00 kWp</p>
+                </div>
+            </div>
+            
+            <!-- Detalhamento de Perdas (Novo) -->
+            <div id="container_detalhes_perdas" style="margin-top: 15px; border-top: 1px solid var(--borda-suave); padding-top: 15px; display: none;">
+                <!-- Injetado via JS -->
+            </div>
+        </section>
+
+        <div class="grid-resumo-detalhado" style="margin-bottom: 20px;">
+            <section class="card-tecnico">
+                <div class="secao-header"><i class="fas fa-solar-panel"></i> <span>Sistema Gerador</span></div>
+                <div class="info-valor" id="view_modelo_modulo" style="font-size: 1.2rem; color: var(--primaria);">---</div>
+                <p style="margin: 5px 0;">Quantidade: <strong id="view_qtd_modulo">0</strong> unidades</p>
+                <p style="margin: 5px 0;">Potência Total: <strong id="view_potencia_total">0.00</strong> kWp</p>
+            </section>
+
+            <section class="card-tecnico">
+                <div class="secao-header"><i class="fas fa-microchip"></i> <span>Inversores Selecionados</span></div>
+                <div style="margin-bottom: 15px; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <span class="info-label" style="margin:0;">Potência Nominal Total</span>
+                        <strong id="view_potencia_inversores" style="color: #0f172a; font-size: 1rem;">0.00 kW</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="info-label" style="margin:0;">Carga Efetiva (DC/AC)</span>
+                        <strong id="view_carga_efetiva" style="color: var(--primaria); font-size: 1rem;">0%</strong>
+                    </div>
+                </div>
+                <div id="container_inversores_view">
+                    <!-- Injetado via JS -->
+                </div>
+            </section>
+
+            <!-- NOVA SEÇÃO: Potencial de Expansão -->
+            <section class="card-tecnico">
+                <div class="secao-header"><i class="fas fa-chart-line"></i> <span>Potencial de Expansão</span></div>
+                <div class="grid-expansao" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <p class="info-label">Geração Atual</p>
+                        <p class="info-valor" id="view_geracao_atual">0 kWh</p>
+                    </div>
+                    <div>
+                        <p class="info-label">Geração Máxima</p>
+                        <p class="info-valor" id="view_geracao_max" style="color: #16a34a;">0 kWh</p>
+                    </div>
+                </div>
+                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee;">
+                    <p class="info-label">Capacidade Adicional</p>
+                    <p id="view_capacidade_extra" style="font-weight: 600; color: #334155;">+0 módulos</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Demonstrativo Financeiro Detalhado (Novo) -->
+        <div id="container_demonstrativo_financeiro" style="margin-bottom: 20px;">
+            <!-- Injetado via JS -->
+        </div>
+
+        <!-- Container Financeiro Comparativo (Novo) -->
+        <div id="container_financeiro_comparativo">
+            <!-- Injetado via JS -->
+        </div>
+    </main>
+
+    <script src="js/visualizarController.js" type="module"></script>
+</body>
+</html>

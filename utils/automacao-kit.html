@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Documentação Técnica: Automação de Cotação Belenus</title>
+    <style>
+        :root { --primary: #1a2a6c; --secondary: #b21f1f; --bg: #f5f6fa; --text: #2f3640; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px; }
+        .main-container { max-width: 1100px; margin: auto; background: white; padding: 40px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); border-radius: 12px; }
+        header { border-bottom: 3px solid var(--primary); margin-bottom: 30px; }
+        h1 { color: var(--primary); text-transform: uppercase; font-size: 24px; }
+        h2 { color: var(--secondary); margin-top: 40px; border-left: 6px solid var(--secondary); padding-left: 15px; }
+        .logic-card { background: #2d3436; color: #fab1a0; padding: 25px; border-radius: 8px; font-family: 'Courier New', monospace; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+        th { background: var(--primary); color: white; padding: 12px; text-align: left; }
+        td { border: 1px solid #ddd; padding: 10px; }
+        .highlight { color: #d63031; font-weight: bold; }
+        .badge { display: inline-block; background: #dfe6e9; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 12px; }
+        .footer-note { font-size: 12px; color: #7f8c8d; margin-top: 50px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <header>
+        <h1>Consolidado de Engenharia Reversa - 81 Páginas</h1>
+        <p><strong>Foco:</strong> Eliminação de Discrepância de Preço (±2%) | Engenheiro: Jean Marcel</p>
+    </header>
+
+    <section>
+        <h2>1. O Problema: Modelo Linear vs. Modelo Industrial</h2>
+        <p>A discrepância identificada (ex: R$ 6.687 vs R$ 8.704) não é erro de cálculo, mas sim de <strong>modelagem econômica</strong>[cite: 545, 554].</p>
+        <ul>
+            <li><strong>Erro Conceitual:</strong> Tentar somar itens avulsos e aplicar um "desconto de kit" global[cite: 339, 435].</li>
+            <li><strong>Realidade Belenus:</strong> Existe um "preço sombra" (shadow price) interno para kits, onde o benefício fiscal (ICMS/IPI/ST zero) já está embutido[cite: 372, 530].</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>2. Estrutura de Precificação por Categoria</h2>
+        <p>Para atingir o ajuste fino de ±2%, o motor de cálculo deve tratar cada categoria separadamente[cite: 562, 571].</p>
+        
+        <h3>Módulos (Fator de Volume)</h3>
+        <p>O custo do módulo em kit é superior ao avulso, pois absorve custos estruturais[cite: 555].</p>
+        <div class="logic-card">
+            custoModuloKit = custoModuloAvulso * fatorModuloKit;<br>
+            // Fatores Sugeridos por Faixa:<br>
+            - Até 5.5 kWp: 1.215 <br>
+            - 5.5 a 15 kWp: 1.172 <br>
+            - Acima de 15 kWp: 1.138
+        </div>
+
+        <h3>Inversores (Tabela Discreta)</h3>
+        <p>Inversores pequenos (3-6 kW) são artificialmente mais baratos para entrada de mercado[cite: 557, 573].</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Modelo Inversor</th>
+                    <th>Faixa kWp (Kit)</th>
+                    <th>Custo Estimado (R$)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>SUN2000-3KTL-L1</td>
+                    <td>Até 4.5 kWp</td>
+                    <td>R$ 2.350,00</td>
+                </tr>
+                <tr>
+                    <td>SUN2000-3KTL-L1</td>
+                    <td>4.5 - 6.0 kWp</td>
+                    <td>R$ 2.180,00</td>
+                </tr>
+                <tr>
+                    <td>SUN2000-6KTL-L1</td>
+                    <td>Médio</td>
+                    <td>R$ 3.100,00</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>3. Logística e Frete (Modelo Belenus-SP → Arapiraca/AL)</h2>
+        <p>O frete não é uma percentagem pura, mas sim uma base fixa somada a um variável por kWp[cite: 558, 577].</p>
+        <div class="logic-card">
+            frete = Math.max(freteMinimo, freteMinimo + (kwp * fretePorKwp));<br>
+            // Parâmetros Calibrados:<br>
+            freteMinimo = 720.00;<br>
+            fretePorKwp = 95.00;
+        </div>
+    </section>
+
+    <section>
+        <h2>4. Arquitetura de Auto-Calibração (D1 Cloudflare)</h2>
+        <p>Estrutura de banco de dados para que o sistema aprenda com novos PDFs carregados[cite: 104, 108].</p>
+        <div class="logic-card">
+            CREATE TABLE parametros_calibracao (<br>
+                id UUID PRIMARY KEY,<br>
+                parametro VARCHAR(60), -- ex: 'fator_modulo_ate_5kw'<br>
+                valor_atual DECIMAL(10,6),<br>
+                limite_min DECIMAL(10,6),<br>
+                limite_max DECIMAL(10,6),<br>
+                atualizado_em TIMESTAMP<br>
+            );
+        </div>
+    </section>
+
+    <section>
+        <h2>5. Resumo das Amostras Reais</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Kit Potência</th>
+                    <th>Módulos</th>
+                    <th>Inversor</th>
+                    <th>Status de Calibração</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>112,84 kWp</td>
+                    <td>182 un</td>
+                    <td>Huawei SUN2000-100KTL</td>
+                    <td><span class="badge">Macro Validado</span></td>
+                </tr>
+                <tr>
+                    <td>4,20 kWp</td>
+                    <td>6 un</td>
+                    <td>SUN2000-3KTL-L1</td>
+                    <td><span class="badge">Ajuste Fino Aplicado</span></td>
+                </tr>
+                <tr>
+                    <td>24,80 kWp</td>
+                    <td>40 un</td>
+                    <td>SUN2000-25K</td>
+                    <td><span class="badge">±2% Precisão</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <footer class="footer-note">
+        <p>Documentação extraída integralmente para o Engenheiro Jean Marcel. Código gerado para integração direta no Backend/Worker.</p>
+    </footer>
+</div>
+
+</body>
+</html>

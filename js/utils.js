@@ -2,6 +2,59 @@
  * Funções utilitárias de Interface (UI) compartilhadas entre os controladores.
  */
 
+// Injeta estilos críticos para o Loading Overlay e correções visuais
+(function injetarEstilosCriticos() {
+    const styleId = 'estilos-criticos-utils';
+    if (document.getElementById(styleId)) return;
+
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.innerHTML = `
+        /* Loading Overlay Fixo e Garantido */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 999999; /* Z-index altíssimo */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .loading-overlay:not(.oculto) {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e2e8f0;
+            border-top: 5px solid var(--primaria, #16a34a);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Ocultar menu Clientes preventivamente */
+        .menu-principal a[onclick*="clientes"] { display: none !important; }
+    `;
+    document.head.appendChild(style);
+
+    // Cria o elemento do overlay se não existir
+    if (!document.querySelector('.loading-overlay')) {
+        const overlay = document.createElement('div');
+        overlay.className = 'loading-overlay oculto';
+        overlay.innerHTML = '<div class="loading-spinner"></div>';
+        document.body.appendChild(overlay);
+    }
+})();
+
 export function mostrarLoadingOverlay() {
     const overlay = document.querySelector('.loading-overlay');
     const mainContent = document.querySelector('main');
@@ -30,136 +83,6 @@ export function esconderLoadingOverlay() {
     }
 }
 
-export function exibirMensagemBloqueio() {
-    esconderLoadingOverlay();
-    
-    // Captura o link do WhatsApp configurado no rodapé antes de limpar o DOM
-    const whatsappBtn = document.querySelector('footer a[href*="wa.me"]');
-    const whatsappUrl = whatsappBtn ? whatsappBtn.href : 'https://wa.me/5582999469016'; // Fallback seguro
-
-    // 1. Limpa o body para remover a aplicação e focar na mensagem
-    document.body.innerHTML = '';
-    
-    // 2. Define estilos base do corpo para centralizar
-    Object.assign(document.body.style, {
-        backgroundColor: '#0e1116', // Mantém alinhado com --bg-main
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-        margin: '0',
-        fontFamily: "'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        overflow: 'hidden'
-    });
-
-    // 3. Cria o elemento HTML (CSS agora está no style.css)
-    const container = document.createElement('div');
-    container.className = 'proposal-access-minimal';
-    container.innerHTML = `
-        <div class="access-header">
-            <span style="font-size: 1.4rem;">❗</span>
-            <span class="access-title">Proposta com acesso personalizado</span>
-        </div>
-        <a href="${whatsappUrl}" target="_blank" class="whatsapp-link">
-            <i class="fab fa-whatsapp"></i>
-            Falar com Engenheiro
-        </a>
-    `;
-    
-    document.body.appendChild(container);
-}
-
-export function organizarSecaoConfiabilidade() {
-    const container = document.getElementById('secao-video-instalacao');
-    if (!container) return;
-    if (container.classList.contains('secao-organizada')) return;
-
-    let videos = Array.from(container.querySelectorAll('.video-somente-container'));
-    if (videos.length === 0) videos = Array.from(container.querySelectorAll('iframe, video, .video-container'));
-
-    let imagens = Array.from(container.querySelectorAll('.imagem-garantia-container'));
-    if (imagens.length === 0) imagens = Array.from(container.querySelectorAll('img, .banner-container'));
-
-    if (videos.length === 0 && imagens.length === 0) return;
-
-    container.innerHTML = '';
-    container.classList.add('secao-organizada');
-
-    if (videos.length > 0) {
-        const divConfiabilidade = document.createElement('div');
-        divConfiabilidade.className = 'secao-confiabilidade';
-        divConfiabilidade.style.marginBottom = '50px';
-        divConfiabilidade.innerHTML = `
-            <h2 class="titulo-secao" style="text-align: center; margin-bottom: 40px;">Confiabilidade</h2>
-            <div class="grid-videos" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;"></div>
-        `;
-        const grid = divConfiabilidade.querySelector('.grid-videos');
-        videos.forEach(v => { v.style.maxWidth = '100%'; grid.appendChild(v); });
-        container.appendChild(divConfiabilidade);
-    }
-
-    if (imagens.length > 0) {
-        const divGarantias = document.createElement('div');
-        divGarantias.className = 'secao-garantias';
-        divGarantias.innerHTML = `
-            <h2 class="titulo-secao" style="text-align: center; margin-bottom: 40px;">Garantias e Respaldo</h2>
-            <div class="grid-banners" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;"></div>
-        `;
-        const grid = divGarantias.querySelector('.grid-banners');
-        imagens.forEach(img => { img.style.maxWidth = '100%'; img.style.height = 'auto'; grid.appendChild(img); });
-        container.appendChild(divGarantias);
-    }
-}
-
-/**
- * Inicia o observador de interseção para o Scroll Storytelling.
- * Aplica a classe .visible aos elementos .bloco-animado quando entram na tela.
- */
-export function iniciarScrollStorytelling() {
-    // SELEÇÃO INTELIGENTE: Pega apenas elementos que ainda NÃO foram observados
-    const elementos = document.querySelectorAll(".bloco-animado:not(.observed-init)");
-
-    if (elementos.length === 0) return;
-
-    const observer = new IntersectionObserver(
-        (entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add("visible");
-                    // Opcional: Parar de observar após animar (para performance)
-                    observer.unobserve(entry.target);
-                }
-            });
-        },
-        {
-            threshold: 0.15, // Ativa quando 15% do elemento está visível (bom para mobile)
-            rootMargin: "0px 0px -50px 0px" // Offset para não ativar muito na borda inferior
-        }
-    );
-
-    elementos.forEach(el => {
-        observer.observe(el);
-        el.classList.add('observed-init'); // Marca como observado para evitar duplicação
-    });
-}
-
-/**
- * Cria o HTML estruturado para o bloco de "Linha Técnica" (Storytelling).
- * @param {string} texto O texto a ser exibido. Pode conter tags HTML como <strong>.
- * @returns {HTMLElement} O elemento section configurado.
- */
-export function criarBlocoLinhaTecnica(texto) {
-    const section = document.createElement('section');
-    section.className = 'bloco-animado bloco-linha grain-bg';
-    
-    section.innerHTML = `
-        <span class="linha-tecnica"></span>
-        <p class="texto-principal">${texto}</p>
-    `;
-    
-    return section;
-}
-
 /**
  * Higieniza inputs para aceitar apenas números e vírgula/ponto.
  * Converte automaticamente para ponto para o JS.
@@ -168,8 +91,8 @@ export function criarBlocoLinhaTecnica(texto) {
  */
 export function higienizarParaCalculo(valor) {
     if (typeof valor !== 'string') return '';
-    // Remove tudo que não for número, ponto ou vírgula
-    let cleanValue = valor.replace(/[^\d.,]/g, '');
+    // Remove tudo que não for número, ponto, vírgula ou sinal de menos
+    let cleanValue = valor.replace(/[^\d.,-]/g, '');
     
     // Converte vírgula em ponto
     cleanValue = cleanValue.replace(',', '.');
@@ -194,4 +117,201 @@ export function escapeHTML(str) {
         tag => ({
             '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
         }[tag]));
+}
+
+/**
+ * Formata um número para moeda BRL padrão.
+ * @param {number} valor Valor numérico.
+ * @returns {string} String formatada (ex: R$ 1.200,00).
+ */
+export function formatarMoeda(valor) {
+    return (valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+/**
+ * Gera o HTML do badge de status para Propostas.
+ * @param {string} status - Status da proposta (EM_ABERTO, VENDIDA, PERDIDA).
+ * @param {string|null} versao - Versão vendida ('standard' ou 'premium'), opcional.
+ * @returns {string} HTML do badge.
+ */
+export function obterBadgeStatusProposta(status, versao = null) {
+    switch (status) {
+        case 'VENDIDA':
+            let label = 'Vendida';
+            let icon = 'fa-check-circle';
+            let style = 'background:#dcfce7; color:#166534; border:1px solid #bbf7d0;'; // Verde (Padrão)
+
+            if (versao === 'premium') {
+                label = 'Vendida (Premium)';
+                icon = 'fa-crown';
+                style = 'background:#fffbeb; color:#b45309; border:1px solid #fcd34d;'; // Gold
+            } else if (versao === 'standard') {
+                label = 'Vendida (Standard)';
+            }
+            
+            return `<span class="badge" style="${style}"><i class="fas ${icon}"></i> ${label}</span>`;
+        case 'PERDIDA':
+            return `<span class="badge" style="background:#fef2f2; color:#991b1b; border:1px solid #fecaca;"><i class="fas fa-times-circle"></i> Perdida</span>`;
+        case 'EM_ABERTO':
+        default:
+            return `<span class="badge" style="background:#eff6ff; color:#1e40af; border:1px solid #dbeafe;"><i class="fas fa-clock"></i> Pendente</span>`;
+    }
+}
+
+/**
+ * Gera o HTML do badge de status para Projetos.
+ * @param {string} status - Status do projeto (EM_COTACAO, VENDIDO, CANCELADO).
+ * @returns {string} HTML do badge.
+ */
+export function obterBadgeStatusProjeto(status) {
+    switch (status) {
+        case 'VENDIDO':
+            return `<span class="badge" style="background:#dcfce7; color:#166534; border:1px solid #bbf7d0;"><i class="fas fa-hard-hat"></i> Em Execução</span>`;
+        case 'CANCELADO':
+            return `<span class="badge" style="background:#f1f5f9; color:#64748b; border:1px solid #e2e8f0;">Cancelado</span>`;
+        case 'EM_COTACAO':
+        default:
+            return `<span class="badge" style="background:#fff7ed; color:#9a3412; border:1px solid #ffedd5;"><i class="fas fa-calculator"></i> Em Cotação</span>`;
+    }
+}
+
+/**
+ * Gera o HTML do badge de status para Clientes.
+ * @param {string} status - Status do cliente (LEAD, CLIENTE).
+ * @returns {string} HTML do badge.
+ */
+export function obterBadgeStatusCliente(status) {
+    if (status === 'CLIENTE') {
+        return `<span class="badge" style="background:#d1fae5; color:#065f46; font-weight:700; letter-spacing:0.5px;">CLIENTE ATIVO</span>`;
+    }
+    return `<span class="badge" style="background:#f3f4f6; color:#4b5563;">LEAD / PROSPECT</span>`;
+}
+
+// ======================================================================
+// MODAIS PERSONALIZADOS (SUBSTITUIÇÃO DE ALERT/CONFIRM/PROMPT)
+// ======================================================================
+
+function criarEstruturaModal(titulo, conteudoHtml, tipo = 'info') {
+    return new Promise((resolve) => {
+        const modalId = 'modal_custom_' + Date.now();
+        const overlay = document.createElement('div');
+        overlay.id = modalId;
+        overlay.className = 'modal-overlay';
+        overlay.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center;
+            align-items: center; z-index: 100000; backdrop-filter: blur(2px);
+            animation: fadeIn 0.2s ease-out;
+        `;
+
+        const corIcone = tipo === 'erro' ? '#ef4444' : (tipo === 'sucesso' ? '#16a34a' : (tipo === 'perigo' ? '#ef4444' : '#3b82f6'));
+        const icone = tipo === 'erro' || tipo === 'perigo' ? 'fa-exclamation-circle' : (tipo === 'sucesso' ? 'fa-check-circle' : 'fa-info-circle');
+
+        overlay.innerHTML = `
+            <div class="modal-content" style="background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 450px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); transform: scale(0.95); animation: scaleUp 0.2s ease-out forwards;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="background: ${corIcone}15; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                        <i class="fas ${icone}" style="font-size: 30px; color: ${corIcone};"></i>
+                    </div>
+                    <h3 style="color: #1e293b; margin: 0; font-size: 1.25rem;">${titulo}</h3>
+                </div>
+                <div style="color: #64748b; font-size: 0.95rem; text-align: center; margin-bottom: 25px; line-height: 1.5;">
+                    ${conteudoHtml}
+                </div>
+                <div id="${modalId}_actions" style="display: flex; gap: 10px; justify-content: center;">
+                </div>
+            </div>
+            <style>
+                @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+                @keyframes scaleUp { from { transform: scale(0.95); } to { transform: scale(1); } }
+            </style>
+        `;
+
+        document.body.appendChild(overlay);
+        
+        // Retorna elementos para configuração dos botões
+        resolve({ overlay, actions: document.getElementById(`${modalId}_actions`) });
+    });
+}
+
+export async function customAlert(mensagem, titulo = 'Atenção', tipo = 'info') {
+    const { overlay, actions } = await criarEstruturaModal(titulo, mensagem, tipo);
+    
+    return new Promise((resolve) => {
+        const btn = document.createElement('button');
+        btn.innerText = 'Entendido';
+        btn.className = 'btn-primary';
+        btn.style.cssText = "min-width: 120px; justify-content: center;";
+        btn.onclick = () => {
+            overlay.remove();
+            resolve(true);
+        };
+        actions.appendChild(btn);
+        btn.focus();
+    });
+}
+
+export async function customConfirm(mensagem, titulo = 'Confirmação', tipo = 'perigo') {
+    const { overlay, actions } = await criarEstruturaModal(titulo, mensagem, tipo);
+    
+    return new Promise((resolve) => {
+        const btnCancel = document.createElement('button');
+        btnCancel.innerText = 'Cancelar';
+        btnCancel.className = 'btn-secundario';
+        btnCancel.onclick = () => {
+            overlay.remove();
+            resolve(false);
+        };
+
+        const btnConfirm = document.createElement('button');
+        btnConfirm.innerText = 'Confirmar';
+        btnConfirm.className = tipo === 'perigo' ? 'btn-perigo' : 'btn-primary';
+        btnConfirm.onclick = () => {
+            overlay.remove();
+            resolve(true);
+        };
+
+        actions.appendChild(btnCancel);
+        actions.appendChild(btnConfirm);
+        btnConfirm.focus();
+    });
+}
+
+export async function customPrompt(mensagem, valorPadrao = '', titulo = 'Informe o valor') {
+    const inputHtml = `<input type="text" id="prompt_input" value="${valorPadrao}" class="input-estilizado" style="width: 100%; margin-top: 10px;">`;
+    const { overlay, actions } = await criarEstruturaModal(titulo, mensagem + inputHtml, 'info');
+    
+    const input = overlay.querySelector('#prompt_input');
+    
+    return new Promise((resolve) => {
+        const btnCancel = document.createElement('button');
+        btnCancel.innerText = 'Cancelar';
+        btnCancel.className = 'btn-secundario';
+        btnCancel.onclick = () => {
+            overlay.remove();
+            resolve(null);
+        };
+
+        const btnConfirm = document.createElement('button');
+        btnConfirm.innerText = 'OK';
+        btnConfirm.className = 'btn-primary';
+        btnConfirm.onclick = () => {
+            const val = input.value;
+            overlay.remove();
+            resolve(val);
+        };
+
+        // Enter para confirmar
+        input.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') btnConfirm.click();
+        });
+
+        actions.appendChild(btnCancel);
+        actions.appendChild(btnConfirm);
+        
+        setTimeout(() => {
+            input.focus();
+            input.select();
+        }, 100);
+    });
 }

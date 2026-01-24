@@ -3,39 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Novo Projeto | BelEnergy</title>
+    <title>Novo Projeto</title>
     <link rel="stylesheet" href="css/engenharia.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="theme-acessivel">
+<body class="bg-light">
     <main class="area-trabalho-engenharia">
         <div class="card-tecnico">
             <div class="header-modulo">
-                <h2 id="nome_cliente_projeto">
-                    <i class="fas fa-file-invoice"></i> 
-                    <span>Novo Projeto Solar</span>
-                </h2>
+                <div>
+                    <h2><i class="fas fa-project-diagram"></i> Dados do Projeto</h2>
+                </div>
+                <!-- Ações injetadas via JS -->
             </div>
     
-            <div class="grid-inputs">
-                <div class="form-group campo-destaque">
+            <div class="grid-form">
+                <div class="form-group col-12">
                     <label>Título do Projeto (Identificação única)</label>
                     <input type="text" id="nome_projeto" class="input-estilizado" placeholder="Ex: Residência Jean Marcel - Sistema 6kWp" required>
                 </div>
+
+                <!-- Separador Visual -->
+                <hr style="grid-column: 1 / -1; border: 0; border-top: 1px solid #e2e8f0; margin: 0.5rem 0;">
     
                 <div class="form-group col-6">
                     <label>Cidade da Instalação (Cliente)</label>
-                    <div id="projeto_cidade_display" class="valor-informativo">--</div>
+                    <input type="text" id="projeto_cidade_display" class="input-estilizado input-heranca" disabled value="--">
                 </div>
                 <div class="form-group col-6">
                     <label>UF</label>
-                    <div id="projeto_uf_display" class="valor-informativo">--</div>
+                    <input type="text" id="projeto_uf_display" class="input-estilizado input-heranca" disabled value="--">
                 </div>
+
+                <!-- Separador Visual -->
+                <hr style="grid-column: 1 / -1; border: 0; border-top: 1px solid #e2e8f0; margin: 0.5rem 0;">
     
-                <div class="form-group col-6">
+                <div class="form-group col-4">
                     <label><i class="fas fa-bolt"></i> Concessionária de Energia</label>
                     <select id="projeto_concessionaria" class="input-estilizado">
                         <option value="Equatorial AL">Equatorial AL</option>
@@ -43,22 +49,15 @@
                         <option value="Energisa SE">Energisa SE</option>
                     </select>
                 </div>
-                <div class="form-group col-6">
+                <div class="form-group col-4">
                     <label><i class="fas fa-tools"></i> Estrutura de Fixação</label>
                     <select id="tipo_telhado" class="input-estilizado">
-                        <option value="ceramico">Telha Cerâmica</option>
-                        <option value="fibrocimento-madeira">Fibrocimento (Madeira)</option>
-                        <option value="fibrocimento-metalico">Fibrocimento (Metálico)</option>
-                        <option value="metalico">Metálico Trapezoidal</option>
+                        <option value="telhado">Telhado (Padrão)</option>
+                        <option value="laje">Laje Plana</option>
                         <option value="solo">Solo / Usina</option>
                     </select>
                 </div>
 
-                <!-- NOVOS CAMPOS: DADOS DA UNIDADE CONSUMIDORA -->
-                <div class="form-group col-4">
-                    <label>Consumo Médio (kWh)</label>
-                    <input type="number" id="projeto_consumo" class="input-estilizado" placeholder="0" required>
-                </div>
                 <div class="form-group col-4">
                     <label>Tipo de Ligação</label>
                     <select id="projeto_tipo_ligacao" class="input-estilizado">
@@ -67,18 +66,38 @@
                         <option value="trifasico">Trifásico</option>
                     </select>
                 </div>
-                <div class="form-group col-4">
+
+                <div class="form-group col-6">
+                    <label>Consumo Médio (kWh)</label>
+                    <input type="number" id="projeto_consumo" class="input-estilizado" placeholder="0" required>
+                </div>
+                <div class="form-group col-6">
                     <label>HSP Local (Estimado)</label>
-                    <div class="hsp-display-luxe" style="background: #f1f5f9; border: 1px solid #e2e8f0; padding: 10px; border-radius: 10px; display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-sun" style="color: #FFD700;"></i>
-                        <strong id="display_hsp" style="font-size: 1.2rem; color: #0f172a;">--</strong>
+                    <div class="hsp-display-luxe">
+                        <i class="fas fa-sun hsp-icon"></i>
+                        <strong id="display_hsp" style="font-size: 0.9rem; color: var(--texto-header); margin-right: 5px;">--</strong>
                         <small>kWh/m².dia</small>
                     </div>
                 </div>
+
+                <!-- Separador Visual -->
+                <hr style="grid-column: 1 / -1; border: 0; border-top: 1px solid #e2e8f0; margin: 0.5rem 0;">
+
+                <div class="form-group col-12">
+                    <h4 style="margin: 10px 0 5px 0; color: var(--primaria); font-size: 0.9rem;"><i class="fas fa-receipt"></i> Dados Tarifários e Fiscais (Fatura de Energia)</h4>
+                </div>
+
+                <div class="form-group col-6">
+                    <label>Tarifa Cheia (R$/kWh)</label>
+                    <input type="number" id="tarifa_grupo_b" class="input-estilizado" placeholder="R$/kWh" step="0.01">
+                </div>
+                <div class="form-group col-3">
+                    <label>Ilum. Pública (% do Total)</label>
+                    <input type="number" id="iluminacao_publica" class="input-estilizado" placeholder="%" step="0.1">
+                </div>
             </div>
     
-            <div class="botoes-fluxo">
-                <button type="button" class="btn-secundario" onclick="history.back()">Cancelar</button>
+            <div class="botoes-fluxo" style="justify-content: flex-end;">
                 <button type="button" id="btn-salvar-projeto" class="btn-primary"><i class="fas fa-save"></i> Salvar Projeto</button>
             </div>
         </div>

@@ -10,9 +10,8 @@ document.getElementById('form-login-restrito').addEventListener('submit', async 
 
     // Validação Simples (Temporária para teste imediato)
     // Futuramente, isso será substituído por: await post('/api/auth/login', { user, pass })
-    // if (user === "admin" && pass === "belenergy2024") { 
-    if (true) { // Bypass temporário solicitado para desenvolvimento
-        feedback.innerText = "Acesso autorizado! Redirecionando...";
+    if (true) { // Bypass ativado para fase de desenvolvimento
+        feedback.innerText = "Modo Dev: Acesso autorizado!";
         feedback.classList.add('show', 'success-msg');
         btn.disabled = true;
         

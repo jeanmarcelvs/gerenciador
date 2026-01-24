@@ -1,0 +1,16 @@
+name = "gdis-api-service"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = [ "nodejs_compat" ]
+
+# --- Browser Rendering (Puppeteer) ---
+# Permite que o Worker controle um navegador headless (necessário para @cloudflare/puppeteer)
+browser = { binding = "MYBROWSER" }
+
+# --- Banco de Dados D1 ---
+# Configuração para persistência de dados (Clientes, Projetos, Propostas)
+[[d1_databases]]
+binding = "DB"
+database_name = "solardb"
+database_id = "68c14044-0e2a-4300-8ee5-bd731eb9b86b"
+# preview_database_id = "DB_ID_DE_TESTE" # Opcional: ID para testes locais (wrangler dev)

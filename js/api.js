@@ -1,5 +1,5 @@
 // A URL base agora é a do seu Worker, não mais a API externa.
-const WORKER_URL = 'https://gdis-api-service.jeanmarcel-vs.workers.dev';
+export const WORKER_URL = 'https://gdis-api-service.jeanmarcel-vs.workers.dev';
 
 // Função para obter os headers dinamicamente, incluindo o token de autenticação se disponível.
 function getHeaders() {
@@ -16,7 +16,8 @@ function getHeaders() {
 // As funções agora são simples wrappers para chamar o seu Worker
 export async function get(endpoint) {
     try {
-        const fullUrl = `${WORKER_URL}/solarmarket${endpoint}`;
+        // Usa o prefixo /erp/ para rotas de banco de dados
+        const fullUrl = `${WORKER_URL}/erp${endpoint}`;
         
         const response = await fetch(fullUrl, { headers: getHeaders() });
 
@@ -42,7 +43,7 @@ export async function get(endpoint) {
 
 export async function post(endpoint, dados) {
     try {
-        const fullUrl = `${WORKER_URL}/solarmarket${endpoint}`;
+        const fullUrl = `${WORKER_URL}/erp${endpoint}`;
         
         const response = await fetch(fullUrl, {
             method: 'POST',
@@ -71,7 +72,7 @@ export async function post(endpoint, dados) {
 
 export async function patch(endpoint, dados) {
     try {
-        const fullUrl = `${WORKER_URL}/solarmarket${endpoint}`;
+        const fullUrl = `${WORKER_URL}/erp${endpoint}`;
         
         const response = await fetch(fullUrl, {
             method: 'PATCH',
@@ -96,6 +97,37 @@ export async function patch(endpoint, dados) {
         
     } catch (error) {
         return { sucesso: false, mensagem: 'Ocorreu um erro ao tentar atualizar o status de visualização.' };
+    }
+}
+
+export async function remove(endpoint) {
+    try {
+        const fullUrl = `${WORKER_URL}/erp${endpoint}`;
+        
+        const response = await fetch(fullUrl, {
+            method: 'DELETE',
+            headers: getHeaders()
+        });
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+            // SILENCIAR ERRO 404: Se não achou, é porque já foi excluído. Loga como aviso apenas.
+            if (response.status === 404) {
+                console.warn(`Aviso na requisição DELETE para ${endpoint}: 404 (Não encontrado).`);
+            } else {
+                console.error(`Erro na requisição DELETE para ${endpoint}: ${response.status}. Corpo:`, errorBody);
+            }
+            
+            if (response.status === 401) {
+                window.location.href = 'index.html?erro=acesso-negado';
+                return { sucesso: false, mensagem: 'Não autorizado.' };
+            }
+            return { sucesso: false, mensagem: `Erro na API: ${response.statusText}`, status: response.status };
+        }
+        
+        return { sucesso: true, status: response.status };
+    } catch (error) {
+        return { sucesso: false, mensagem: 'Erro ao tentar excluir o registro.' };
     }
 }
 

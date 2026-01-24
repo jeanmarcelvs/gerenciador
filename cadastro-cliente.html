@@ -3,24 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Cliente | BelEnergy</title>
+    <title>Cadastro de Cliente</title>
     <link rel="stylesheet" href="css/engenharia.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="theme-acessivel">
+<body class="bg-light">
     <main class="area-trabalho-engenharia">
         <div class="card-tecnico">
             <div class="header-modulo">
-                <h2><i class="fas fa-user-plus"></i> Cadastro de Cliente</h2>
-                <button class="btn-secundario" onclick="window.location.href='dashboard-admin.html'">Voltar</button>
+                <div>
+                    <h2><i class="fas fa-user"></i> Dados do Cliente</h2>
+                </div>
+                <button class="btn-secundario" onclick="window.location.href='dashboard-admin.html'">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
             </div>
             
             <form id="form-cliente">
                 <!-- Dados Pessoais -->
-                <div class="grid-inputs">
+                <div class="grid-form">
                     <div class="form-group col-8">
                         <label for="nome_cliente">Nome Completo / Razão Social</label>
                         <input type="text" id="nome_cliente" class="input-estilizado" placeholder="Ex: Jean Marcel" required>
@@ -102,10 +106,40 @@
                         </select>
                     </div>
                 </div>
-                <div class="botoes-fluxo">
+                <div class="botoes-fluxo" style="justify-content: flex-end;">
                     <button type="submit" class="btn-primary">Salvar Cliente</button>
                 </div>
             </form>
+
+            <!-- SEÇÃO: LISTA DE PROJETOS DO CLIENTE (Injetado via JS) -->
+            <div id="secao-projetos-cliente" style="display: none; margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                <div class="secao-header" style="justify-content: space-between; margin-bottom: 15px; border-bottom: none;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-project-diagram" style="color: var(--primaria);"></i>
+                        <span style="font-size: 1.1rem; font-weight: 600; color: #1e293b;">Projetos deste Cliente</span>
+                    </div>
+                    <button type="button" class="btn-primary-sm" onclick="window.novoProjetoParaCliente()">
+                        <i class="fas fa-plus"></i> Novo Projeto
+                    </button>
+                </div>
+
+                <div class="tabela-container">
+                    <table class="tabela-gestao">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Projeto</th>
+                                <th>Localização</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo_lista_projetos_cliente">
+                            <!-- Conteúdo injetado via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </main>
 
