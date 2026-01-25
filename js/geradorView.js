@@ -31,15 +31,28 @@ export const geradorView = {
             btn.onclick = onClickHandler;
             
             // Estilos inline para garantir visibilidade no header escuro (match visualizar-proposta)
-            btn.style.background = 'none';
-            btn.style.border = 'none';
+            btn.style.background = 'transparent';
+            btn.style.border = '1px solid transparent';
             btn.style.cursor = 'pointer';
-            btn.style.color = '#94a3b8';
+            btn.style.color = '#ffffff';
             btn.style.fontWeight = '600';
             btn.style.display = 'flex';
             btn.style.alignItems = 'center';
             btn.style.gap = '5px';
             btn.style.marginRight = '15px';
+            btn.style.padding = '6px 12px';
+            btn.style.borderRadius = '6px';
+            btn.style.transition = 'all 0.2s';
+
+            // Efeito Hover (Aspecto de Cancelar)
+            btn.onmouseover = () => {
+                btn.style.backgroundColor = 'rgba(239, 68, 68, 0.2)'; // Vermelho translúcido
+                btn.style.color = '#fca5a5'; // Vermelho claro
+            };
+            btn.onmouseout = () => {
+                btn.style.backgroundColor = 'transparent';
+                btn.style.color = '#ffffff';
+            };
 
             // Insere antes do primeiro filho (geralmente a logo)
             headerContainer.insertBefore(btn, headerContainer.firstChild);
@@ -210,54 +223,6 @@ export const geradorView = {
                  <div>
                     <span style="display:block; font-size:0.7rem; text-transform:uppercase; color:#94a3b8; font-weight:700; letter-spacing:0.5px;">Expansão Futura</span>
                     <strong style="color:#0f172a; font-size:1rem;">${expansaoTxt}</strong>
-                </div>
-                <div style="width: 100%; border-top: 1px dashed #e2e8f0; margin-top: 5px; padding-top: 10px; text-align: center;">
-                    <button class="btn-secundario-sm" onclick="document.getElementById('detalhe_bom_kit').style.display = document.getElementById('detalhe_bom_kit').style.display === 'none' ? 'block' : 'none'" style="font-size: 0.8rem;">
-                        <i class="fas fa-list-ul"></i> Ver Lista de Materiais (BOM)
-                    </button>
-                </div>
-                <div id="detalhe_bom_kit" style="display: none; width: 100%; margin-top: 10px;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <!-- STANDARD -->
-                        <div style="background: #fff; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0;">
-                            <h5 style="margin: 0 0 10px 0; color: #334155; font-size: 0.9rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 5px;">Detalhamento do Kit (Standard)</h5>
-                            <table style="width: 100%; font-size: 0.8rem; border-collapse: collapse;">
-                                <thead>
-                                    <tr style="background: #f8fafc; color: #64748b;">
-                                        <th style="text-align: left; padding: 5px;">Item</th>
-                                        <th style="text-align: center; padding: 5px;">Qtd</th>
-                                        <th style="text-align: right; padding: 5px;">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${renderTableRows(kitStd)}
-                                </tbody>
-                                <tfoot>
-                                    ${renderTableFooter(kitStd)}
-                                </tfoot>
-                            </table>
-                        </div>
-
-                        <!-- PREMIUM -->
-                        <div style="background: #fff; padding: 15px; border-radius: 6px; border: 1px solid #fcd34d;">
-                            <h5 style="margin: 0 0 10px 0; color: #b45309; font-size: 0.9rem; border-bottom: 1px solid #fcd34d; padding-bottom: 5px;">Detalhamento do Kit (Premium)</h5>
-                            <table style="width: 100%; font-size: 0.8rem; border-collapse: collapse;">
-                                <thead>
-                                    <tr style="background: #fffbeb; color: #b45309;">
-                                        <th style="text-align: left; padding: 5px;">Item</th>
-                                        <th style="text-align: center; padding: 5px;">Qtd</th>
-                                        <th style="text-align: right; padding: 5px;">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${renderTableRows(kitPrm)}
-                                </tbody>
-                                <tfoot>
-                                    ${renderTableFooter(kitPrm)}
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
                 </div>
             </div>
         `;

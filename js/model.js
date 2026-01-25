@@ -199,8 +199,10 @@ export function obterCatalogoModulos() {
 
 // Função para calcular custo do kit (Módulos + Inversores + Estrutura + Cabos + Proteção + Frete)
 export function calcularCustoKit(modulos, inversores, isPremium = false, tipoRede = 'monofasico') {
+    // [TEMPORÁRIO] Funcionalidade desabilitada. Retorna 0 para forçar entrada manual.
+    return { total: 0, itens: [], custoBruto: 0, ajusteCalibracao: 0, frete: 0 };
+
     const catalogo = db.buscarConfiguracao('catalogo_belenus');
-    const premissas = db.buscarConfiguracao('premissas_globais'); // Busca parâmetros de calibração
     if (!catalogo) return { total: 0, itens: [] };
 
     // Regras de Montagem (Hardcoded ou do DB se existirem, mantendo defaults seguros)
@@ -349,35 +351,51 @@ export function calcularCustoKit(modulos, inversores, isPremium = false, tipoRed
     // 7. Consolidação do Preço (RÉGUA DE CALIBRAÇÃO / INTEHIGÊNCIA DE PREÇO)
     // Substitui a lógica simples de desconto por fatores calibrados por faixa de potência
     
-    const params = premissas?.precificacaoKit || {};
+    const regras = catalogo.regras_calculo || {};
     
-    // A. Fatores de Correção (Margem do Fornecedor por Faixa)
-    const FATOR_SMALL = params.fatorModuloSmall || 0.818;  // < 5.5 kWp (Recalibrado)
-    const FATOR_MEDIUM = params.fatorModuloMedium || 0.818; // 5.5 - 15 kWp
-    const FATOR_LARGE = params.fatorModuloLarge || 0.810;  // > 15 kWp
+    // A. Desconto Progressivo (Kit Gerador)
+    let percentualDesconto = 0.0659; // Fallback
+    if (regras.descontos_kit_por_kwp && Array.isArray(regras.descontos_kit_por_kwp) && regras.descontos_kit_por_kwp.length > 0) {
+        // Ordena as faixas e encontra a primeira que atende ao kWp do projeto
+        const faixasOrdenadas = [...regras.descontos_kit_por_kwp].sort((a, b) => a.max_kwp - b.max_kwp);
+        const faixaEncontrada = faixasOrdenadas.find(f => potenciaTotalKWp <= f.max_kwp);
+        
+        if (faixaEncontrada) {
+            percentualDesconto = faixaEncontrada.percentual;
+        } else {
+            // Se ultrapassar a maior faixa definida, usa o último percentual disponível
+            percentualDesconto = faixasOrdenadas[faixasOrdenadas.length - 1].percentual;
+        }
+    } else if (regras.desconto_kit_padrao) { // Mantém fallback para estrutura antiga
+        percentualDesconto = regras.desconto_kit_padrao;
+    }
 
-    let fatorAplicado = 1.0;
-    if (potenciaTotalKWp <= 5.5) fatorAplicado = FATOR_SMALL;
-    else if (potenciaTotalKWp <= 15) fatorAplicado = FATOR_MEDIUM;
-    else fatorAplicado = FATOR_LARGE;
+    console.log(`[Cálculo Kit] Potência: ${potenciaTotalKWp.toFixed(2)}kWp | Desconto Aplicado: ${(percentualDesconto * 100).toFixed(2)}%`);
+    const custoComDesconto = custoBruto * (1 - percentualDesconto);
+    const valorDesconto = custoBruto - custoComDesconto;
 
-    // Aplica o fator sobre a soma dos itens (Simula a precificação do kit fechado)
-    const custoMateriaisCalibrado = custoBruto * fatorAplicado;
-    const diferencaCalibracao = custoBruto - custoMateriaisCalibrado; // Se negativo, é acréscimo
-
-    // B. Cálculo de Frete Logístico (Curva Logística)
-    const FRETE_MIN = params.freteMinimo || 450.00;
-    const FRETE_VAR = params.fretePorKwp || 144.00; // Recalibrado para R$ 1072 em 4.32kWp
-    
-    let valorFrete = 0;
-    if (potenciaTotalKWp > 0) {
-        valorFrete = Math.max(FRETE_MIN, FRETE_MIN + (potenciaTotalKWp * FRETE_VAR));
+    // B. Cálculo de Frete (Diluição no Total)
+    let percentualFrete = 0.0650; // Fallback
+    if (regras.frete_diluicao && Array.isArray(regras.frete_diluicao) && regras.frete_diluicao.length > 0) {
+        const faixasFreteOrdenadas = [...regras.frete_diluicao].sort((a, b) => a.max_kwp - b.max_kwp);
+        const faixaFreteEncontrada = faixasFreteOrdenadas.find(f => potenciaTotalKWp <= f.max_kwp);
+        
+        if (faixaFreteEncontrada) {
+            percentualFrete = faixaFreteEncontrada.percentual;
+        } else {
+            // Se ultrapassar a maior faixa, usa o último percentual
+            percentualFrete = faixasFreteOrdenadas[faixasFreteOrdenadas.length - 1].percentual;
+        }
     }
     
+    // Cálculo Reverso: Total = CustoComDesconto / (1 - %Frete)
+    const valorTotal = custoComDesconto / (1 - percentualFrete);
+    const valorFrete = valorTotal - custoComDesconto;
+    
     return {
-        total: custoMateriaisCalibrado + valorFrete,
+        total: valorTotal,
         custoBruto: custoBruto, // Mantém o valor original da soma dos itens para exibição
-        ajusteCalibracao: diferencaCalibracao, // Valor para exibir como "Desconto" ou "Ajuste"
+        ajusteCalibracao: valorDesconto, // Valor para exibir como "Desconto" ou "Ajuste"
         frete: valorFrete,
         itens
     };

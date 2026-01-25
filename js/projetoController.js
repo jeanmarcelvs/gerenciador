@@ -449,7 +449,7 @@ function injetarCampoOrigemVenda() {
                 <label for="projeto_origem_venda">Origem da Venda / Comissão</label>
                 <select id="projeto_origem_venda" class="input-estilizado">
                     <option value="nenhum">Venda Direta (Sem Comissão)</option>
-                    <option value="indicador">Indicação (Parceiro)</option>
+                    <option value="indicador" selected>Indicação (Parceiro)</option>
                     <option value="representante">Representante Comercial</option>
                 </select>
             `;

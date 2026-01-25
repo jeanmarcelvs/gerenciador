@@ -4,30 +4,34 @@
 UPDATE configuracoes 
 SET dados = '{
   "fornecedor": "Belenus/BelEnergy",
-  "data_atualizacao": "2026-01-22",
+  "data_atualizacao": "2026-01-24",
   "regras_calculo": {
-    "desconto_kit_padrao": 0.0659,
+    "descontos_kit_por_kwp": [
+      {"max_kwp": 4.0, "percentual": 0.0659},
+      {"max_kwp": 8.0, "percentual": 0.1820},
+      {"max_kwp": 30.0, "percentual": 0.2050},
+      {"max_kwp": 999.0, "percentual": 0.2200}
+    ],
     "margem_seguranca_estrutura": 0,
     "fator_suporte_fixacao": 1.0,
     "fator_cabo_por_painel": 7.5,
     "frete_diluicao": [
-      {"max_kwp": 5.5, "percentual": 0.1506},
+      {"max_kwp": 5.5, "percentual": 0.1560},
       {"max_kwp": 15.0, "percentual": 0.1050},
-      {"max_kwp": 30.0, "percentual": 0.0850},
       {"max_kwp": 999.0, "percentual": 0.0650}
     ]
   },
   "modulos": [
     {"cod": "MFHN-1.2-MO-120-465W", "desc": "Honor 465W N-Type", "custo_kit": 405.80, "wp": 465},
-    {"cod": "MFMA-1.3-BF-115-540W", "desc": "Maxeon 540W PERC Bifacial", "custo_kit": 513.00, "wp": 540},
-    {"cod": "MFMA-1.3-BF-115-545W", "desc": "Maxeon 545W PERC Bifacial", "custo_kit": 517.75, "wp": 545},
+    {"cod": "MFMA-1.3-BF-115-540W", "desc": "Maxeon 540W PERC Bifacial", "custo_kit": 428, "wp": 540},
+    {"cod": "MFMA-1.3-BF-115-545W", "desc": "Maxeon 545W PERC Bifacial", "custo_kit": 432, "wp": 545},
     {"cod": "MFAS-1.4-BF-144-580W", "desc": "Astronergy 580W N-Type Bifacial", "custo_kit": 506.10, "wp": 580},
     {"cod": "MFRO-1.2-BF-144-585W", "desc": "Ronma 585W N-Type Bifacial", "custo_kit": 510.54, "wp": 585},
     {"cod": "MFAS-1.4-BF-132-605W", "desc": "Astronergy 605W N-Type Bifacial", "custo_kit": 527.98, "wp": 605},
     {"cod": "MFTC-1.2-BF-132-610W", "desc": "TCL Solar 610W N-Type Bifacial", "custo_kit": 532.34, "wp": 610},
     {"cod": "MFJA-1.5-BF-132-615W", "desc": "JA Solar 615W N-Type Bifacial", "custo_kit": 536.70, "wp": 615},
     {"cod": "MFTC-1.2-BF-132-620W", "desc": "TCL Solar 620W N-Type Bifacial", "custo_kit": 541.07, "wp": 620},
-    {"cod": "MFJA-1.4-BF-132-625W", "desc": "JA Solar 625W N-Type Bifacial", "custo_kit": 545.43, "wp": 625},
+    {"cod": "MFJA-1.4-BF-132-625W", "desc": "JA Solar 625W N-Type Bifacial", "custo_kit": 648, "wp": 625},
     {"cod": "MFHN-1.2-MO-132-700W", "desc": "Honor 700W Topcon Monofacial", "custo_kit": 610.90, "wp": 700},
     {"cod": "MFTR-1.4-BF-132-715W", "desc": "Trina 715W N-Type Bifacial", "custo_kit": 624.04, "wp": 715}
   ],
