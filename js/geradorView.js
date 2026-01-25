@@ -513,18 +513,18 @@ export const geradorView = {
             <div class="resumo-geral-card" style="background: white; border: 1px solid #cbd5e1; border-radius: 12px; padding: 30px; margin-top: 30px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">
                 
                 <div style="border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 25px; text-align: center;">
-                    <h3 style="color: #0f172a; font-size: 1.5rem; margin: 0;"><i class="fas fa-clipboard-list" style="color: var(--primaria);"></i> Resumo Geral da Proposta</h3>
-                    <p style="color: #64748b; margin-top: 5px;">Confira os dados antes de salvar</p>
+                    <h3 style="color: #0f172a; font-size: 1.2rem; margin: 0;"><i class="fas fa-clipboard-list" style="color: var(--primaria);"></i> Resumo Geral da Proposta</h3>
+                    <p style="color: #64748b; margin-top: 5px; font-size: 0.9rem;">Confira os dados antes de salvar</p>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
                     
                     <!-- Coluna 1: Contexto -->
                     <div style="background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0;">
-                        <h4 style="color: #334155; font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+                        <h4 style="color: #334155; font-size: 1rem; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
                             <i class="fas fa-user-tag"></i> Dados do Projeto
                         </h4>
-                        <div style="display: grid; grid-template-columns: 1fr; gap: 10px; font-size: 1rem; color: #475569;">
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 10px; font-size: 0.9rem; color: #475569;">
                             <div style="display: flex; justify-content: space-between;"><span>Cliente:</span> <strong style="color: #0f172a;">${clienteNome}</strong></div>
                             <div style="display: flex; justify-content: space-between;"><span>Projeto:</span> <strong style="color: #0f172a;">${projNome}</strong></div>
                             <div style="display: flex; justify-content: space-between;"><span>Local:</span> <strong style="color: #0f172a;">${local}</strong></div>
@@ -535,10 +535,10 @@ export const geradorView = {
 
                     <!-- Coluna 2: Engenharia -->
                     <div style="background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0;">
-                        <h4 style="color: #334155; font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+                        <h4 style="color: #334155; font-size: 1rem; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
                             <i class="fas fa-microchip"></i> Solução Técnica
                         </h4>
-                        <div style="display: grid; grid-template-columns: 1fr; gap: 10px; font-size: 1rem; color: #475569;">
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 10px; font-size: 0.9rem; color: #475569;">
                             <div style="display: flex; justify-content: space-between;"><span>Potência DC:</span> <strong style="color: #0f172a;">${potSistema} kWp</strong></div>
                             <div style="display: flex; justify-content: space-between;"><span>Módulos:</span> <strong style="color: #0f172a;">${modulosDesc}</strong></div>
                             <div style="display: flex; justify-content: space-between;"><span>Potência Nominal Inversores:</span> <strong style="color: #0f172a;">${potInversoresAC.toFixed(2)} kW</strong></div>
@@ -554,15 +554,15 @@ export const geradorView = {
 
                 <!-- Bloco Financeiro -->
                 <div style="background: #f0fdf4; padding: 25px; border-radius: 10px; border: 1px solid #bbf7d0; text-align: center; margin-bottom: 30px;">
-                    <h4 style="color: #166534; font-size: 1.2rem; margin-bottom: 20px;">Comparativo de Investimento</h4>
+                    <h4 style="color: #166534; font-size: 1.1rem; margin-bottom: 20px;">Comparativo de Investimento</h4>
                     <div style="display: flex; justify-content: center; gap: 40px; align-items: flex-end;">
                         <div>
-                            <span style="display: block; font-size: 0.9rem; color: #475569; margin-bottom: 5px;">Standard</span>
-                            <span style="font-size: 1.8rem; font-weight: 800; color: #475569; line-height: 1;">${(dados.std.valorTotal || 0).toLocaleString('pt-BR', {style:'currency', currency:'BRL'})}</span>
+                            <span style="display: block; font-size: 0.85rem; color: #475569; margin-bottom: 5px;">Standard</span>
+                            <span style="font-size: 1.3rem; font-weight: 800; color: #475569; line-height: 1;">${(dados.std.valorTotal || 0).toLocaleString('pt-BR', {style:'currency', currency:'BRL'})}</span>
                         </div>
                         <div style="padding-left: 40px; border-left: 1px solid #bbf7d0;">
-                            <span style="display: block; font-size: 0.9rem; color: #15803d; margin-bottom: 5px;">Premium</span>
-                            <span style="font-size: 2.2rem; font-weight: 800; color: #16a34a; line-height: 1;">${(dados.prm.valorTotal || 0).toLocaleString('pt-BR', {style:'currency', currency:'BRL'})}</span>
+                            <span style="display: block; font-size: 0.85rem; color: #15803d; margin-bottom: 5px;">Premium</span>
+                            <span style="font-size: 1.5rem; font-weight: 800; color: #16a34a; line-height: 1;">${(dados.prm.valorTotal || 0).toLocaleString('pt-BR', {style:'currency', currency:'BRL'})}</span>
                         </div>
                     </div>
                     <div style="margin-top: 15px; font-size: 0.9rem; color: #166534;">

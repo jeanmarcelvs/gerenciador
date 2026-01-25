@@ -155,6 +155,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         sincronizarVisual: function (rolarParaTopo = true) {
             const indiceAtual = projetoGerenciador.etapaIndex || 0;
 
+            // FIX: Se a etapa atual for o resumo, garante que o conteúdo seja renderizado
+            const nomeEtapaAtual = this.ordem[indiceAtual];
+            if (nomeEtapaAtual === 'resumo') {
+                // Esta chamada força a renderização do resumo e, consequentemente, do botão e do campo de validade.
+                window.calcularEngenhariaFinanceira();
+            }
+
             console.log("DEBUG: Sincronizando Visual. Etapa atual:", this.ordem[indiceAtual]);
 
             // FIX: Safeguard para garantir renderização dos módulos ao voltar
@@ -215,7 +222,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             this.renderizarMenuNavegacao();
 
             // --- REVALIDAÇÃO DE ESTADO DOS BOTÕES (FIX: Garante estado correto ao navegar) ---
-            const nomeEtapaAtual = this.ordem[indiceAtual];
+            // const nomeEtapaAtual = this.ordem[indiceAtual]; // Já definido acima
             if (nomeEtapaAtual === 'premissas') {
                 if (typeof atualizarEstadoBotaoPremissas === 'function') atualizarEstadoBotaoPremissas();
             } 
@@ -254,8 +261,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     projetoGerenciador.etapaIndex = novoIndice;
                     this.sincronizarVisual();
 
-                    // Atualiza o header se estivermos no resumo
-                    atualizarHeaderResumo(this.ordem[novoIndice] === 'resumo');
+                    // A chamada para atualizarHeaderResumo foi movida para preencherResumoExecutivo para garantir que os elementos existam.
                 }
             }
         },
@@ -277,8 +283,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 projetoGerenciador.etapaIndex = indiceAlvo;
                 this.sincronizarVisual();
 
-                // Atualiza o header se estivermos entrando ou saindo do resumo
-                atualizarHeaderResumo(this.ordem[indiceAlvo] === 'resumo');
+                // A chamada para atualizarHeaderResumo foi movida para preencherResumoExecutivo.
             }
         },
 
@@ -296,8 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 projetoGerenciador.etapaIndex = novoIndice;
                 this.sincronizarVisual();
 
-                // Atualiza o header (provavelmente saindo do resumo)
-                atualizarHeaderResumo(this.ordem[novoIndice] === 'resumo');
+                // A chamada para atualizarHeaderResumo foi movida para preencherResumoExecutivo.
             }
         },
 
@@ -404,31 +408,96 @@ document.addEventListener('DOMContentLoaded', async () => {
     // NOVA FUNÇÃO: Gerencia a exibição do botão no header durante o resumo
     function atualizarHeaderResumo(isResumo) {
         const btn = document.getElementById('btn_gerar_proposta');
-        const cabecalhoContexto = document.getElementById('cabecalho_contexto_projeto');
-        // Tenta encontrar o container de stats. Assumindo estrutura comum de dashboard.
-        // Se não encontrar classe específica, usa o parent do fixoPotReal como referência.
-        const containerStats = document.querySelector('.area-indicadores-fixos') || fixoPotReal?.parentElement?.parentElement;
-        const headerContainer = document.querySelector('.painel-fixo') || containerStats?.parentElement;
+        const grupoAcoes = document.getElementById('grupo_botao_validade'); // Novo grupo unificado
+        const headerContainer = document.querySelector('.header-container');
 
-        if (!btn || !containerStats || !headerContainer) return;
+        if (!headerContainer || !grupoAcoes) {
+            console.warn("Header ou grupo de ações não encontrado para atualização.");
+            return;
+        }
 
         if (isResumo) {
-            containerStats.style.display = 'none'; // Oculta os números
-            // Move o botão para o header
-            headerContainer.appendChild(btn);
+            // Força o layout para empurrar o grupo para a direita
+            headerContainer.style.justifyContent = 'flex-start';
+
+            // Move o botão para o header (Extremidade DIREITA)
+            headerContainer.appendChild(grupoAcoes);
+            
+            grupoAcoes.style.marginLeft = 'auto'; // Empurra para a direita
+            
             btn.classList.add('btn-header-destaque'); // Classe para estilizar no header
+            
+            // Ajuste de estilo do botão para caber no header
+            btn.style.minWidth = 'auto';
+            btn.style.padding = '8px 20px';
+            btn.style.fontSize = '0.95rem';
 
-            // Oculta o cabeçalho de contexto no resumo para limpar a visão
-            if (cabecalhoContexto) cabecalhoContexto.style.display = 'none';
+            // Estilização Específica para o Header (Compacto e Branco)
+            const containerValidade = document.getElementById('container_validade_input');
+            if (containerValidade) {
+                const label = containerValidade.querySelector('label');
+                const input = containerValidade.querySelector('input');
+                if (label) {
+                    label.style.color = '#ffffff';
+                    label.innerText = "Validade (Dias):";
+                    label.style.marginBottom = '0';
+                    label.style.marginRight = '8px';
+                    label.style.fontSize = '0.9rem';
+                    label.style.display = 'inline-block';
+                }
+                if (input) {
+                    input.style.width = '60px';
+                    input.style.height = '36px';
+                    input.style.textAlign = 'center';
+                    input.style.background = 'rgba(255,255,255,0.1)';
+                    input.style.border = '1px solid rgba(255,255,255,0.3)';
+                    input.style.color = '#fff';
+                    input.style.borderRadius = '4px';
+                }
+                // Ajusta layout do container para linha
+                containerValidade.style.display = 'flex';
+                containerValidade.style.alignItems = 'center';
+            }
         } else {
-            containerStats.style.display = ''; // Mostra os números
-            // Devolve o botão para o final da página
-            const containerOriginal = document.getElementById('container_botao_salvar_final');
-            if (containerOriginal) containerOriginal.appendChild(btn);
-            btn.classList.remove('btn-header-destaque');
+            // Restaura o layout do header
+            headerContainer.style.justifyContent = '';
 
-            // Mostra o cabeçalho de contexto nas outras etapas
-            if (cabecalhoContexto) cabecalhoContexto.style.display = 'flex';
+            // Devolve o botão para o final da página
+            const wrapperAction = document.getElementById('wrapper_acao_final');
+            if (wrapperAction) wrapperAction.appendChild(grupoAcoes);
+            
+            grupoAcoes.style.marginLeft = '';
+            
+            btn.classList.remove('btn-header-destaque');
+            
+            // Restaura estilo do botão para o rodapé
+            btn.style.minWidth = '250px';
+            btn.style.padding = '16px 32px';
+            btn.style.fontSize = '1.1rem';
+
+            // Restaura Estilização para o Rodapé (Padrão)
+            const containerValidade = document.getElementById('container_validade_input');
+            if (containerValidade) {
+                const label = containerValidade.querySelector('label');
+                const input = containerValidade.querySelector('input');
+                if (label) {
+                    label.style.color = '#334155';
+                    label.innerText = "Validade da Proposta (Dias)";
+                    label.style.marginBottom = '5px';
+                    label.style.marginRight = '0';
+                    label.style.fontSize = '';
+                    label.style.display = 'block';
+                }
+                if (input) {
+                    input.style.width = '100px';
+                    input.style.height = '';
+                    input.style.background = '';
+                    input.style.border = '';
+                    input.style.color = '';
+                }
+                containerValidade.style.display = 'block';
+                containerValidade.style.alignItems = '';
+            }
         }
     }
 
@@ -562,6 +631,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         const dados = projetoGerenciador.dadosTecnicos;
         const fin = projetoGerenciador.financeiro;
 
+        // --- 1. RESTAURAÇÃO FINANCEIRA (PRIORITÁRIA) ---
+        // Restaura os inputs financeiros ANTES de qualquer lógica que possa disparar cálculos.
+        // Isso evita que 'atualizarComposicaoFinal' calcule preços zerados por falta de input.
+        if (document.getElementById('valor_kit_std')) {
+            const val = fin?.standard?.valorKit;
+            console.log(`[DEBUG] Restaurando Kit Std: ${val} (Tipo: ${typeof val})`);
+            if (val !== undefined && val !== null) document.getElementById('valor_kit_std').value = val;
+        }
+        if (document.getElementById('fator_std')) document.getElementById('fator_std').value = fin?.standard?.fatorLucro || 1.1;
+
+        if (document.getElementById('valor_kit_prm')) {
+            const val = fin?.premium?.valorKit;
+            console.log(`[DEBUG] Restaurando Kit Prm: ${val} (Tipo: ${typeof val})`);
+            if (val !== undefined && val !== null) document.getElementById('valor_kit_prm').value = val;
+        }
+        if (document.getElementById('fator_prm')) document.getElementById('fator_prm').value = fin?.premium?.fatorLucro || 1.2;
+
         if (dados && dados.modulo && dados.modulo.watts) {
             // Restaura dados técnicos
             carrinhoInversores = [...dados.inversores];
@@ -569,14 +655,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (dados.estadoSelecaoInversor) {
                 estadoSelecaoInversor = { ...dados.estadoSelecaoInversor };
             }
-
-            // Restaura Inputs Financeiros (Standard)
-            if (document.getElementById('valor_kit_std')) document.getElementById('valor_kit_std').value = fin.standard.valorKit || '';
-            if (document.getElementById('fator_std')) document.getElementById('fator_std').value = fin.standard.fatorLucro || 1.1;
-
-            // Restaura Inputs Financeiros (Premium)
-            if (document.getElementById('valor_kit_prm')) document.getElementById('valor_kit_prm').value = fin.premium.valorKit || '';
-            if (document.getElementById('fator_prm')) document.getElementById('fator_prm').value = fin.premium.fatorLucro || 1.2;
 
             // Restaura Opcionais
             // A função renderizarOpcionaisPremium lerá do estado se disponível
@@ -613,15 +691,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderizarResumoSuperiorFinanceiro();
 
         } else {
+            console.warn("[DEBUG] Dados técnicos incompletos ou ausentes. Resetando interface.");
             // Se não tem dados, reseta a interface técnica
             zerarInterfaceTecnica();
             // Garante que o PR e outros dados do header sejam atualizados mesmo sem módulos
             sincronizarEngenhariaUnica();
 
-            // Limpa inputs financeiros
-            if (document.getElementById('valor_kit_std')) document.getElementById('valor_kit_std').value = '';
-            if (document.getElementById('valor_kit_prm')) document.getElementById('valor_kit_prm').value = '';
-            
             // Carrega padrões
             carregarFatorLucroPadrao();
 
@@ -904,7 +979,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // FIX: Esconde o container estático da ação final para não poluir as premissas
         const containerFinal = document.querySelector('.container-acao-final');
-        if (containerFinal) containerFinal.style.display = 'none';
+        if (containerFinal) containerFinal.remove(); // Remove do DOM para evitar conflito de ID
 
         // --- POPULA A NOVA BARRA DE CONTEXTO ---
         const elCtxCliente = document.getElementById('ctx_cliente');
@@ -925,7 +1000,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (elCtxOrigem) elCtxOrigem.innerText = origemMap[projetoCompleto.projeto.origemVenda] || 'Venda Direta';
 
         if (typeof window.verificarTipoEstrutura === 'function') {
-            window.verificarTipoEstrutura(); // Atualiza visibilidade do fornecedor
+            window.verificarTipoEstrutura(true); // Atualiza visibilidade (Skip calc para não zerar financeiro)
         }
 
         const { cidade, uf } = projetoCompleto.projeto; // Usa o endereço do projeto
@@ -2270,7 +2345,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // --- NOVA FUNÇÃO: VERIFICAR TIPO DE ESTRUTURA (SOLO/LAJE) ---
-    window.verificarTipoEstrutura = function () {
+    window.verificarTipoEstrutura = function (skipCalculation = false) {
         // CORREÇÃO: Usa dados do projeto em vez de input inexistente
         const tipo = (projetoCompleto.projeto.tipoTelhado || '').toLowerCase();
         const wrapperOrigem = document.getElementById('wrapper_origem_estrutura');
@@ -2288,7 +2363,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Chama o recálculo para atualizar diárias e custos de estrutura
-        if (typeof window.calcularEngenhariaFinanceira === 'function') {
+        if (!skipCalculation && typeof window.calcularEngenhariaFinanceira === 'function') {
             window.calcularEngenhariaFinanceira();
         }
     };
@@ -2759,6 +2834,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!secao) return;
 
         // Só exibe se houver preço calculado
+        if (!projetoGerenciador.precoCalculado) {
+            secao.innerHTML = ''; // Limpa a seção se não for válida
+            secao.classList.add('etapa-oculta');
+            return;
+        }
+
+        // Só exibe se houver preço calculado
         if (projetoGerenciador.precoCalculado) {
             // CORREÇÃO: Só exibe se estivermos na etapa de Resumo
             const indiceAtual = projetoGerenciador.etapaIndex || 0;
@@ -2778,16 +2860,45 @@ document.addEventListener('DOMContentLoaded', async () => {
             const btnSalvar = btnGerarProposta;
             const msgValidacao = msgValidacaoElement; // Usa referência global
             const containerBtn = document.getElementById('container_botao_salvar_final');
+            let containerValidade = document.getElementById('container_validade_input');
 
             if (btnSalvar && containerBtn) {
                 containerBtn.innerHTML = ''; // Limpa container
                 
                 // Wrapper para alinhar botão e mensagem
                 const wrapperAction = document.createElement('div');
+                wrapperAction.id = 'wrapper_acao_final'; // ID para referência
                 wrapperAction.style.cssText = "display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%;";
                 containerBtn.appendChild(wrapperAction);
 
-                wrapperAction.appendChild(btnSalvar);
+                // --- LÓGICA DE CRIAÇÃO DO GRUPO DE AÇÕES ---
+                // PRESERVAÇÃO DO INPUT DE VALIDADE (Evita perder o valor ao recriar o HTML)
+                if (!containerValidade) {
+                    containerValidade = document.createElement('div');
+                    containerValidade.id = 'container_validade_input';
+                    containerValidade.className = 'grupo-form';
+                    containerValidade.style.marginBottom = '0'; // Reset de margem do form-group
+                    
+                    const configGlobal = db.buscarConfiguracao('premissas_globais') || {};
+                    const diasPadrao = configGlobal.financeiro?.validadeProposta || 3;
+                    
+                    containerValidade.innerHTML = `<label for="dias_validade_proposta" style="display:block; margin-bottom:5px; color:#334155;">Validade da Proposta (Dias)</label>
+                                                   <input type="number" id="dias_validade_proposta" class="input-estilizado" value="${diasPadrao}" style="width:100px; text-align:center;">`;
+                }
+
+                let grupoAcoes = document.getElementById('grupo_botao_validade');
+                if (!grupoAcoes) {
+                    grupoAcoes = document.createElement('div');
+                    grupoAcoes.id = 'grupo_botao_validade';
+                    grupoAcoes.style.cssText = "display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center;";
+                }
+                
+                // Limpa o grupo para remontar na ordem correta (validade, depois botão)
+                grupoAcoes.innerHTML = '';
+                grupoAcoes.appendChild(containerValidade);
+                grupoAcoes.appendChild(btnSalvar);
+                
+                wrapperAction.appendChild(grupoAcoes);
                 
                 if (msgValidacao) {
                     wrapperAction.appendChild(msgValidacao);
@@ -2805,6 +2916,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 btnSalvar.style.justifyContent = 'center';
                 btnSalvar.style.alignItems = 'center';
                 btnSalvar.style.gap = '10px';
+
+                // Força atualização da posição (Header vs Footer) baseado na etapa atual
+                const indiceAtual = projetoGerenciador.etapaIndex || 0;
+                const isResumo = gerenciadorEtapas.ordem[indiceAtual] === 'resumo';
+                atualizarHeaderResumo(isResumo);
             }
 
             // --- CÁLCULO E EXIBIÇÃO DA ANÁLISE FINANCEIRA ---
@@ -3112,6 +3228,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Assume que a estrutura salva tem versoes.standard e versoes.premium
             // E que os dados técnicos são iguais (ou pega do standard como base)
             if (propostaSalva.versoes.standard) {
+                console.log("[DEBUG] Carregando Financeiro Salvo:", propostaSalva.versoes.standard.resumoFinanceiro);
                 projetoGerenciador.dadosTecnicos = propostaSalva.versoes.standard.dados;
                 projetoGerenciador.financeiro.standard = propostaSalva.versoes.standard.resumoFinanceiro || {};
                 projetoGerenciador.financeiro.premium = propostaSalva.versoes.premium?.resumoFinanceiro || {};
