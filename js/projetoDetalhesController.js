@@ -308,9 +308,15 @@ function renderizarPainelExecucao(projeto, container) {
                 </div>
                 
                 <div style="display: flex; flex-direction: column; gap: 10px;">
+                    ${renderCheck('visitaTecnica', 'Visita Técnica Realizada')}
+                    ${renderCheck('projetoElaborado', 'Projeto de Engenharia Elaborado')}
+                    ${renderCheck('acessoSolicitado', 'Solicitação de Acesso (Protocolo)')}
+                    ${renderCheck('parecerAcesso', 'Parecer de Acesso Emitido')}
+                    ${renderCheck('pedidoCompra', 'Pedido de Compra do Kit')}
+                    ${renderCheck('pagamentoKit', 'Pagamento do Kit Confirmado')}
                     ${renderCheck('kitExpedido', 'Kit Expedido')}
                     ${renderCheck('kitEntregue', 'Kit Entregue na Obra')}
-                    ${renderCheck('instalacaoAgendada', 'Instalação Agendada')}
+                    ${renderCheck('instalacaoAgendada', 'Instalação Iniciada')}
                     ${renderCheck('vistoriaSolicitada', 'Vistoria Solicitada')}
                     ${renderCheck('vistoriaAprovada', 'Vistoria Aprovada')}
                 </div>

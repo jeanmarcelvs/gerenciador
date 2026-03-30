@@ -340,9 +340,19 @@ async function carregarCidades(uf, cidadePreSelecionada = null) {
     
     const cidades = await obterCidadesPorUF(uf);
     
-    cidadeSelect.innerHTML = cidades.map(c => 
-        `<option value="${c.nome}" ${cidadePreSelecionada === c.nome ? 'selected' : ''}>${c.nome}</option>`
-    ).join('');
+    if (cidades && cidades.length > 0) {
+        cidadeSelect.innerHTML = cidades.map(c => 
+            `<option value="${c.nome}" ${cidadePreSelecionada === c.nome ? 'selected' : ''}>${c.nome}</option>`
+        ).join('');
+
+        // UX: Adiciona opção padrão se não houver cidade pré-selecionada (busca manual)
+        if (!cidadePreSelecionada) {
+            cidadeSelect.insertAdjacentHTML('afterbegin', '<option value="" selected>Selecione a Cidade</option>');
+        }
+    } else {
+        cidadeSelect.innerHTML = '<option value="">Erro ao carregar lista</option>';
+        customAlert("Não foi possível carregar a lista de cidades. Verifique sua conexão.", "Erro de Rede", "erro");
+    }
 }
 
 // Salvar e Avançar

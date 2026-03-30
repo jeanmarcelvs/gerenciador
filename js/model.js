@@ -22,11 +22,23 @@ export async function buscarEnderecoPorCEP(cep) {
 // Busca de Cidades via API do IBGE
 export async function obterCidadesPorUF(uf) {
     try {
+        // Tenta IBGE (Fonte Primária)
         const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios?orderBy=nome`);
+        if (!response.ok) throw new Error("Erro na API do IBGE");
         return await response.json();
     } catch (error) {
-        console.error("Erro ao buscar cidades", error);
-        return [];
+        console.warn("API IBGE indisponível. Tentando BrasilAPI...", error);
+        try {
+            // Tenta BrasilAPI (Fallback)
+            const responseBackup = await fetch(`https://brasilapi.com.br/api/ibge/municipios/v1/${uf}`);
+            if (!responseBackup.ok) throw new Error("Erro na BrasilAPI");
+            const dados = await responseBackup.json();
+            // Ordena manualmente pois BrasilAPI pode não retornar ordenado por padrão
+            return dados.sort((a, b) => a.nome.localeCompare(b.nome));
+        } catch (erroFinal) {
+            console.error("Falha crítica ao buscar cidades (Todas as fontes):", erroFinal);
+            return [];
+        }
     }
 }
 
