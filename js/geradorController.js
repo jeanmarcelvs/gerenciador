@@ -3143,6 +3143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 projetoId: projetoCompleto.projeto.id, // Relacionamento com Projeto
                 clienteId: projetoCompleto.id,         // Relacionamento com Cliente
                 
+                tipoApresentacao: modoEdicao ? (propostaSalva.tipoApresentacao || 'estimativa') : 'estimativa',
                 // Campos de Resumo para Listagem Rápida (Desnormalização)
                 valor: resumoCapa.valorTotal,
                 potenciaKwp: (dadosTecnicos.modulo.watts * dadosTecnicos.modulo.qtd) / 1000,

@@ -537,6 +537,11 @@ function carregarPropostasDoProjeto(projetoId) {
         const status = prop.status || 'EM_ABERTO';
         const std = prop.versoes?.standard?.resumoFinanceiro;
         const prm = prop.versoes?.premium?.resumoFinanceiro;
+        
+        const modoApres = prop.tipoApresentacao || 'estimativa';
+        const modoIcone = modoApres === 'definitiva' ? 'fa-toggle-on' : 'fa-toggle-off';
+        const modoCor = modoApres === 'definitiva' ? '#16a34a' : '#94a3b8';
+        const modoLabel = modoApres === 'definitiva' ? 'Definitiva' : 'Estimativa';
 
         const htmlPotencia = `<strong>${(prop.potenciaKwp || 0).toFixed(2)} kWp</strong>`;
         const htmlGeracao = `<div style="color:#15803d;">${prop.geracaoMensal || 0} <span style="color:#94a3b8; font-size:0.75rem;">/ ${prop.geracaoExpansao || 0} kWh</span></div>`;
@@ -582,6 +587,7 @@ function carregarPropostasDoProjeto(projetoId) {
         } else {
             botoesAcao = `
                 <button class="btn-icon-sucesso" onclick="window.abrirModalFechamento('${prop.id}')" title="Fechar Venda / Dar Baixa"><i class="fas fa-handshake"></i></button>
+                <button class="btn-icon" onclick="window.alternarModoApresentacao('${prop.id}')" title="Alternar Modo: Atualmente ${modoLabel}"><i class="fas ${modoIcone}" style="color:${modoCor}"></i></button>
                 <button class="btn-icon" onclick="window.visualizarProposta('${prop.id}')" title="Visualizar Proposta"><i class="fas fa-eye"></i></button>
                 <button class="btn-icon" onclick="window.editarPropostaDoProjeto('${prop.id}')" title="Editar Proposta"><i class="fas fa-pencil-alt"></i></button>
                 <button class="btn-icon" onclick="window.excluirPropostaDoProjeto('${prop.id}')" title="Excluir Proposta"><i class="fas fa-trash"></i></button>
@@ -697,6 +703,25 @@ window.renovarValidade = async function(id) {
     esconderLoadingOverlay();
     await customAlert(`Validade atualizada para ${novaData.toLocaleDateString()}!`, "Sucesso", "sucesso");
     carregarPropostasDoProjeto(projetoId); // Recarrega a lista local
+};
+
+// Função para alternar entre proposta Estimativa e Definitiva
+window.alternarModoApresentacao = async function(id) {
+    const proposta = db.buscarPorId('propostas', id);
+    if (!proposta) return;
+
+    const novoModo = proposta.tipoApresentacao === 'definitiva' ? 'estimativa' : 'definitiva';
+    
+    mostrarLoadingOverlay();
+    await db.atualizar('propostas', id, { tipoApresentacao: novoModo });
+    esconderLoadingOverlay();
+
+    const msg = novoModo === 'definitiva' ? 
+        'Modo DEFINITIVO ativado. (A apresentação mostrará todos os detalhes técnicos)' : 
+        'Modo ESTIMATIVA ativado. (A apresentação será simplificada)';
+    
+    await customAlert(msg, "Modo de Apresentação", "sucesso");
+    carregarPropostasDoProjeto(projetoId);
 };
 
 // ======================================================================

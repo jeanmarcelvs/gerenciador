@@ -186,8 +186,8 @@ export default {
                         const currentData = JSON.parse(current.dados);
                         const newData = { ...currentData, ...body };
                         
-                        const statusFinal = newData.status ?? currentData.status ?? current.status ?? 'EM_COTACAO';
-                        const nomeFinal = newData.nome_projeto ?? currentData.nome_projeto ?? current.nome_projeto ?? 'Projeto Sem Nome';
+                        const statusFinal = body.status ?? current.status ?? 'EM_COTACAO';
+                        const nomeFinal = body.nome_projeto ?? body.nome ?? current.nome_projeto ?? 'Projeto Sem Nome';
 
                         await env.DB.prepare("UPDATE projetos SET dados = ?, status = ?, nome_projeto = ? WHERE id = ?")
                             .bind(JSON.stringify(newData), statusFinal, nomeFinal, id).run();
@@ -227,22 +227,23 @@ export default {
 
                     if (method === 'POST') {
                         const body = await request.json();
-                        await env.DB.prepare("INSERT INTO propostas (id, projeto_id, cliente_id, status, dados, data_criacao) VALUES (?, ?, ?, ?, ?, ?)")
-                            .bind(body.id, body.projetoId, body.clienteId, body.status || 'EM_ABERTO', JSON.stringify(body), body.dataCriacao).run();
+                        await env.DB.prepare("INSERT INTO propostas (id, projeto_id, cliente_id, status, tipo_apresentacao, dados, data_criacao) VALUES (?, ?, ?, ?, ?, ?, ?)")
+                            .bind(body.id, body.projetoId, body.clienteId, body.status || 'EM_ABERTO', body.tipoApresentacao || 'estimativa', JSON.stringify(body), body.dataCriacao).run();
                         return jsonResponse({ success: true });
                     }
 
                     if (method === 'PATCH' && id) {
                         const body = await request.json();
-                        const current = await env.DB.prepare("SELECT dados, status FROM propostas WHERE id = ?").bind(id).first();
+                        const current = await env.DB.prepare("SELECT dados, status, tipo_apresentacao FROM propostas WHERE id = ?").bind(id).first();
                         if (!current) return jsonResponse({ error: "Proposta não encontrada" }, 404);
                         const currentData = JSON.parse(current.dados);
                         const newData = { ...currentData, ...body };
                         
-                        const statusFinal = newData.status ?? currentData.status ?? current.status ?? 'EM_ABERTO';
+                        const statusFinal = body.status ?? current.status ?? 'EM_ABERTO';
+                        const tipoApresentacaoFinal = body.tipoApresentacao ?? current.tipo_apresentacao ?? 'estimativa';
 
-                        await env.DB.prepare("UPDATE propostas SET dados = ?, status = ? WHERE id = ?")
-                            .bind(JSON.stringify(newData), statusFinal, id).run();
+                        await env.DB.prepare("UPDATE propostas SET dados = ?, status = ?, tipo_apresentacao = ? WHERE id = ?")
+                            .bind(JSON.stringify(newData), statusFinal, tipoApresentacaoFinal, id).run();
                         return jsonResponse({ success: true });
                     }
 

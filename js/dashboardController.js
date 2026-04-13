@@ -124,6 +124,7 @@ function carregarDadosDashboard() {
             
             return {
                 id: prop.id,
+                tipoApresentacao: prop.tipoApresentacao || 'estimativa',
                 dataRef: prop.dataAtualizacao || prop.dataCriacao,
                 status: prop.status,
                 versaoVendida: prop.detalhesVenda?.versaoVendida,
@@ -725,6 +726,25 @@ window.renovarValidade = async function(id) {
     esconderLoadingOverlay();
     await customAlert(`Validade atualizada para ${novaData.toLocaleDateString()}!`, "Sucesso", "sucesso");
     carregarDadosDashboard(); // Recarrega a tabela
+};
+
+// Função para alternar modo de apresentação no Dashboard
+window.alternarModoApresentacao = async function(id) {
+    const proposta = db.buscarPorId('propostas', id);
+    if (!proposta) return;
+
+    const novoModo = proposta.tipoApresentacao === 'definitiva' ? 'estimativa' : 'definitiva';
+    
+    mostrarLoadingOverlay();
+    await db.atualizar('propostas', id, { tipoApresentacao: novoModo });
+    esconderLoadingOverlay();
+
+    const msg = novoModo === 'definitiva' ? 
+        'Proposta alterada para DEFINITIVA.' : 
+        'Proposta alterada para ESTIMATIVA.';
+    
+    await customAlert(msg, "Status Atualizado", "sucesso");
+    carregarDadosDashboard();
 };
 
 // ======================================================================
