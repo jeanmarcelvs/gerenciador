@@ -3219,9 +3219,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- VERIFICAÇÃO DE EDIÇÃO DE PROPOSTA (MOVIDO PARA O FINAL PARA GARANTIR FUNÇÕES DEFINIDAS) ---
     const propostaIdEdicao = sessionStorage.getItem('proposta_ativa_id');
     let modoEdicao = false;
+    let propostaSalva = null;
 
     if (propostaIdEdicao) {
-        const propostaSalva = db.listar('propostas').find(p => p.id === propostaIdEdicao);
+        propostaSalva = db.listar('propostas').find(p => p.id === propostaIdEdicao);
         if (propostaSalva) {
             console.log("Modo Edição: Carregando proposta", propostaIdEdicao);
             modoEdicao = true;
