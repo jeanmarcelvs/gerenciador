@@ -3142,6 +3142,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const propostaParaGravar = {
                 projetoId: projetoCompleto.projeto.id, // Relacionamento com Projeto
                 clienteId: projetoCompleto.id,         // Relacionamento com Cliente
+                clienteNome: projetoCompleto.nome,     // Nome do Cliente (Desnormalização para consulta rápida)
                 
                 tipoApresentacao: modoEdicao ? (propostaSalva.tipoApresentacao || 'estimativa') : 'estimativa',
                 // Campos de Resumo para Listagem Rápida (Desnormalização)

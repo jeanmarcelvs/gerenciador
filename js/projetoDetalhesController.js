@@ -1,5 +1,5 @@
 import db from './databaseService.js';
-import { obterBadgeStatusProposta, formatarMoeda, mostrarLoadingOverlay, esconderLoadingOverlay, customAlert, customConfirm, customPrompt } from './utils.js';
+import { obterBadgeStatusProposta, formatarMoeda, mostrarLoadingOverlay, esconderLoadingOverlay, customAlert, customConfirm, customPrompt, abrirPropostaParaEdicao } from './utils.js';
 
 // Trava de Segurança
 if (!sessionStorage.getItem('auth_belenergy')) {
@@ -582,6 +582,7 @@ function carregarPropostasDoProjeto(projetoId) {
             botoesAcao = `
                 <span style="font-size:0.8rem; color:#166534; font-weight:600; margin-right:10px;"><i class="fas fa-lock"></i> Fechada</span>
                 <button class="btn-icon-perigo" onclick="window.cancelarVenda('${prop.id}')" title="Cancelar Venda / Estornar"><i class="fas fa-undo"></i></button>
+                <button class="btn-icon" onclick="window.gerarPDFPropostaExecutiva('${prop.id}')" title="Gerar PDF Executivo"><i class="fas fa-file-pdf"></i></button>
                 <button class="btn-icon" onclick="window.visualizarProposta('${prop.id}')" title="Ver Contrato/Detalhes"><i class="fas fa-file-contract"></i></button>
             `;
         } else {
@@ -589,6 +590,7 @@ function carregarPropostasDoProjeto(projetoId) {
                 <button class="btn-icon-sucesso" onclick="window.abrirModalFechamento('${prop.id}')" title="Fechar Venda / Dar Baixa"><i class="fas fa-handshake"></i></button>
                 <button class="btn-icon" onclick="window.alternarModoApresentacao('${prop.id}')" title="Alternar Modo: Atualmente ${modoLabel}"><i class="fas ${modoIcone}" style="color:${modoCor}"></i></button>
                 <button class="btn-icon" onclick="window.visualizarProposta('${prop.id}')" title="Visualizar Proposta"><i class="fas fa-eye"></i></button>
+                <button class="btn-icon" onclick="window.gerarPDFPropostaExecutiva('${prop.id}')" title="Gerar PDF Executivo"><i class="fas fa-file-pdf"></i></button>
                 <button class="btn-icon" onclick="window.editarPropostaDoProjeto('${prop.id}')" title="Editar Proposta"><i class="fas fa-pencil-alt"></i></button>
                 <button class="btn-icon" onclick="window.excluirPropostaDoProjeto('${prop.id}')" title="Excluir Proposta"><i class="fas fa-trash"></i></button>
             `;
@@ -956,3 +958,16 @@ const btnVoltar = document.getElementById('btn-voltar');
 if (btnVoltar) {
     btnVoltar.onclick = window.voltar;
 }
+
+// ======================================================================
+// 📄 GERADOR DE DOCUMENTO EXECUTIVO (EDITÁVEL)
+// ======================================================================
+window.gerarPDFPropostaExecutiva = function(propostaId) {
+    const proposta = db.buscarPorId('propostas', propostaId);
+    if (!proposta) return customAlert("Proposta não encontrada.");
+
+    const projeto = db.buscarPorId('projetos', proposta.projetoId);
+    const cliente = db.buscarPorId('clientes', proposta.clienteId);
+
+    abrirPropostaParaEdicao(proposta, projeto, cliente);
+};

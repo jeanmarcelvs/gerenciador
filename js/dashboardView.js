@@ -296,6 +296,7 @@ export const dashboardView = {
                 <td style="text-align: right; ${tdStyle}">
                     <button class="btn-icon" onclick="window.copiarLinkProposta('${prop.id.substring(0,8)}', '${prop.primeiroNomeCliente}')" title="Copiar Link"><i class="fas fa-link"></i></button>
                     <button class="btn-icon" onclick="window.visualizarProposta('${prop.id}')" title="Visualizar Proposta"><i class="fas fa-eye"></i></button>
+                    <button class="btn-icon" onclick="window.gerarPDFPropostaExecutiva('${prop.id}')" title="Gerar Proposta Executiva (Editável)"><i class="fas fa-file-pdf"></i></button>
                     ${btnEditar}
                     ${btnExcluir}
                 </td>

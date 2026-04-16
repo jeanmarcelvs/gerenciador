@@ -83,7 +83,7 @@ function renderizarDadosVersao(proposta, projeto, cliente) {
     const premissas = { ...proposta.premissasSnapshot, ...(dadosTecnicos.premissasTecnicas || {}) };
 
     // --- IDENTIFICAÇÃO ---
-    setText('view_cliente_nome', cliente?.nome || "Cliente não identificado");
+    setText('view_cliente_nome', proposta.clienteNome || cliente?.nome || "Cliente não identificado");
     setText('view_localidade', `${projeto?.cidade || '---'} / ${projeto?.uf || '---'}`);
     setText('view_projeto_id', `Prop: #${proposta.id.substring(0,8)} | Proj: #${projeto.id.substring(0,8)}`);
 

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Proposta Executiva - JEAN MARCEL</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #002d5b; 
+            --gold: #a68966;
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --bg-accent: #f8f9fa;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f4f4f4;
+            color: var(--text-main);
+            line-height: 1.5;
+            -webkit-print-color-adjust: exact;
+        }
+
+        @page { size: A4; margin: 0; }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 10mm auto;
+            background: white;
+            padding: 15mm;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            page-break-after: always;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media print {
+            body { background: white; }
+            .page { margin: 0; box-shadow: none; width: 100%; }
+        }
+
+        /* --- CAPA --- */
+        .cover {
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #001a35 0%, var(--primary) 100%);
+            color: white;
+            text-align: center;
+        }
+        .cover-border { position: absolute; top: 10mm; left: 10mm; right: 10mm; bottom: 10mm; border: 1px solid rgba(166, 137, 102, 0.3); }
+        
+        .cover-logo-img { max-width: 250px; margin-bottom: 10mm; z-index: 1; }
+        
+        .cover-subtitle { font-size: 12pt; text-transform: uppercase; letter-spacing: 5px; color: var(--gold); margin-bottom: 30mm; z-index: 1; }
+        .cover-main-box { background: rgba(255,255,255,0.05); padding: 15mm; border-left: 4px solid var(--gold); text-align: left; width: 80%; z-index: 1; }
+        .cover-title { font-size: 26pt; font-weight: 700; margin-bottom: 4mm; }
+        .cover-footer { position: absolute; bottom: 25mm; display: flex; gap: 20mm; font-size: 9pt; }
+        .cover-footer b { color: var(--gold); text-transform: uppercase; display: block; }
+
+        /* --- HEADER --- */
+        .inner-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--bg-accent); padding-bottom: 3mm; margin-bottom: 6mm; font-size: 8pt; text-transform: uppercase; color: var(--text-light); }
+        .inner-header b { color: var(--primary); }
+
+        /* --- SEÇÕES --- */
+        section { margin-bottom: 6mm; }
+        .section-header { display: flex; align-items: center; margin-bottom: 4mm; border-bottom: 1px solid var(--border); padding-bottom: 2mm; }
+        .section-number { font-size: 11pt; font-weight: 700; color: white; background: var(--primary); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; margin-right: 10px; border-radius: 2px; }
+        .section-title { font-size: 10pt; font-weight: 700; color: var(--primary); text-transform: uppercase; }
+
+        .intro-text { font-size: 9.5pt; text-align: justify; color: var(--text-main); line-height: 1.6; margin-bottom: 6mm; }
+
+        /* --- ENVOLVIDOS --- */
+        .stakeholder-list { display: flex; flex-direction: column; gap: 4mm; }
+        .stakeholder-row { 
+            background: var(--bg-accent); 
+            padding: 4mm; 
+            border-radius: 4px; 
+            border-left: 5px solid var(--gold);
+            display: flex;
+            flex-direction: column;
+        }
+        .stakeholder-row label { 
+            font-size: 7.5pt; 
+            font-weight: 700; 
+            color: var(--primary); 
+            text-transform: uppercase; 
+            margin-bottom: 1.5mm;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+        .stakeholder-row p { font-size: 9pt; line-height: 1.4; color: var(--text-main); }
+        .stakeholder-row b { color: var(--primary); }
+
+        .rt-separator {
+            margin-top: 3mm;
+            padding-top: 3mm;
+            border-top: 1px dashed #cbd5e0;
+        }
+        .rt-label {
+            font-size: 7pt;
+            font-weight: 700;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 1mm;
+            display: block;
+        }
+
+        /* --- PROJETO TÉCNICO --- */
+        .generator-title-box {
+            background: #eef2f7;
+            padding: 3mm;
+            border-radius: 4px;
+            margin-bottom: 3mm;
+            border: 1px solid var(--border);
+        }
+        .generator-name {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 10pt;
+            display: block;
+        }
+        .generator-legal-note {
+            font-size: 7.5pt;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        .tech-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2mm; margin-bottom: 4mm; }
+        .tech-card { background: var(--primary); color: white; padding: 3mm; border-radius: 4px; text-align: center; }
+        .tech-card label { font-size: 6.5pt; text-transform: uppercase; opacity: 0.8; display: block; }
+        .tech-card span { font-size: 10pt; font-weight: 700; }
+
+        .data-table { width: 100%; border-collapse: collapse; font-size: 9pt; }
+        .data-table th { background: var(--bg-accent); padding: 2mm 3mm; border: 1px solid var(--border); text-align: left; color: var(--primary); font-size: 8pt; text-transform: uppercase; }
+        .data-table td { padding: 2mm 3mm; border: 1px solid var(--border); }
+
+        .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15mm; margin-top: 8mm; }
+        .sig-box { text-align: center; }
+        .sig-line { border-top: 1px solid var(--text-main); padding-top: 2mm; margin-top: 18mm; } 
+        .sig-box p { font-size: 8.5pt; font-weight: 700; color: var(--primary); }
+
+        footer { border-top: 1px solid var(--border); padding-top: 3mm; display: flex; justify-content: space-between; font-size: 7.5pt; color: var(--text-light); }
+    </style>
+</head>
+<body>
+
+<div class="page cover">
+    <div class="cover-border"></div>
+    <img src="logo.png" alt="Logo Jean Marcel" class="cover-logo-img">
+    <div class="cover-subtitle">Engenharia Elétrica & Energias Renováveis</div>
+    <div class="cover-main-box">
+        <h2 class="cover-title">Proposta Técnico-Comercial</h2>
+        <p><b>BENEFICIÁRIO:</b> J. C. COSTA & CIA LTDA</p>
+        <p style="font-size: 10pt; margin-top: 2mm; opacity: 0.8;">Sistema de Microgeração On-Grid - Alta Performance - 46,75 kWp</p>
+    </div>
+    <div class="cover-footer">
+        <div><b>Referência</b> #2026-JC-COSTA</div>
+        <div><b>Emissão</b> 14 de Abril de 2026</div>
+    </div>
+</div>
+
+<div class="page">
+    <header class="inner-header">
+        <div><b>JEAN MARCEL</b> | Engenharia Fotovoltaica</div>
+        <div>Proposta #2026-JC-COSTA</div>
+    </header>
+
+    <div class="content">
+        <p class="intro-text">
+            Apresentamos a solução executiva para implantação de um sistema de microgeração fotovoltaica de alto padrão técnico, projetada sob a ótica da <b>Engenharia de Alta Performance</b>. Esta proposta cumpre rigorosamente os requisitos para composição de dossiê de financiamento junto à <b>Caixa Econômica Federal</b>, garantindo conformidade com a Lei 14.300/22 e normas da ANEEL.
+        </p>
+
+        <section>
+            <div class="section-header">
+                <div class="section-number">01</div>
+                <h2 class="section-title">Partes Envolvidas e Dados Cadastrais</h2>
+            </div>
+            
+            <div class="stakeholder-list">
+                <div class="stakeholder-row">
+                    <label>Proponente e Beneficiário (Tomador do Crédito)</label>
+                    <p><b>J. C. COSTA & CIA LTDA</b> | CNPJ: 19.062.484/0001-21</p>
+                    <p>Endereço: Rua Estelina Tenório, 45, Centro, Igaci/AL | CEP: 57.620-000</p>
+                    <p>Responsável: J. C. Costa | Contato: (82) 99654-2020</p>
+                </div>
+
+                <div class="stakeholder-row" style="border-left-color: var(--primary);">
+                    <label>Engenharia Executora e Gestão de Contrato</label>
+                    <p><b>CAMILA SOUZA SILVA</b> | CNPJ: 64.065.082/0001-35</p>
+                    <p>Endereço: Rod. IB Gatto Marinho Falcão, S/N - Mares do Sul, Marechal Deodoro/AL</p>
+                    <p>Inscrição Municipal / CNAE: Serviços de Engenharia e Instalações Elétricas</p>
+                    
+                    <div class="rt-separator">
+                        <span class="rt-label">Responsável Técnico (Projeto e ART)</span>
+                        <p><b>Jean Marcel Vieira Silva</b> | Engenheiro Eletricista</p>
+                        <p><b>CREA/AL:</b> 210984849-0 | Especialista em Sistemas de Potência (SEP)</p>
+                    </div>
+                </div>
+
+                <div class="stakeholder-row">
+                    <label>Distribuidora de Tecnologia (Faturamento Direto)</label>
+                    <p><b>BELENUS LTDA</b> | CNPJ: 05.156.035/0001-40</p>
+                    <p>Unidade Vinhedo/SP | Logística Integrada para o Nordeste</p>
+                    <p><i>Nota: Equipamentos faturados via crédito bancário CEF diretamente ao cliente.</i></p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-header">
+                <div class="section-number">02</div>
+                <h2 class="section-title">Especificações Técnicas do Sistema</h2>
+            </div>
+            
+            <div class="tech-summary">
+                <div class="tech-card"><label>Potência DC</label><span>46,75 kWp</span></div>
+                <div class="tech-card"><label>Produtividade</label><span>6.350 kWh/mês</span></div>
+                <div class="tech-card"><label>Área Estimada</label><span>~ 235 m²</span></div>
+                <div class="tech-card"><label>Tecnologia</label><span>N-Type TOPCon</span></div>
+            </div>
+
+            <div class="generator-title-box">
+                <span class="generator-name">SISTEMA GERADOR FOTOVOLTAICO BELENUS - 46,75 KWP (ITEM ÚNICO)</span>
+                <p class="generator-legal-note">Kit tecnológico homologado para alta eficiência em climas tropicais:</p>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">Qtd</th>
+                        <th>Componente Integrante do Gerador</th>
+                        <th>Diferencial Tecnológico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>85</td><td>Módulos N-Type Bifaciais/TOPCon</td><td>Alta eficiência em baixa irradiância e menor degradação anual.</td></tr>
+                    <tr><td>01</td><td>Inversor String Trifásico 380V</td><td>Tecnologia Solis/Belenus com rastreamento MPPT múltiplo e Wi-Fi.</td></tr>
+                    <tr><td>01</td><td>Estrutura Titanium Industrial</td><td>Alumínio anodizado e fixadores em aço inox (Alta durabilidade).</td></tr>
+                    <tr><td>01</td><td>Sistema de Proteção CC/CA</td><td>Conformidade com NBR 16690: Dispositivos DPS e Seccionamento.</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <footer>
+        <div>contato@jeanmarcel.eng.br | (82) 9XXXX-XXXX</div>
+        <div>Página 01 de 02</div>
+    </footer>
+</div>
+
+<div class="page">
+    <header class="inner-header">
+        <div><b>JEAN MARCEL</b> | Engenharia Fotovoltaica</div>
+        <div>Proposta #2026-JC-COSTA</div>
+    </header>
+
+    <div class="content">
+        <section>
+            <div class="section-header">
+                <div class="section-number">03</div>
+                <h2 class="section-title">Estrutura de Investimento (Capex)</h2>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px; text-align: center;">Qtd</th>
+                        <th style="width: 50px; text-align: center;">Und</th>
+                        <th>Discriminação para Financiamento e Nota Fiscal</th>
+                        <th style="text-align: right;">Valor (R$)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align: center;">01</td>
+                        <td style="text-align: center;">UN</td>
+                        <td><b>Equipamentos:</b> Fornecimento de Gerador Fotovoltaico Belenus 46,75 kWp</td>
+                        <td style="text-align: right;">157.442,15</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;">01</td>
+                        <td style="text-align: center;">GL</td>
+                        <td><b>Serviços:</b> Engenharia Executiva, Instalação e Parecer de Acesso</td>
+                        <td style="text-align: right;">17.557,85</td>
+                    </tr>
+                    <tr style="background: var(--bg-accent); font-weight: 700; color: var(--gold);">
+                        <td colspan="3" style="text-align: right; text-transform: uppercase; font-size: 8pt;">Valor Global da Proposta</td>
+                        <td style="text-align: right;">R$ 175.000,00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <div class="section-header">
+                <div class="section-number">04</div>
+                <h2 class="section-title">Cronograma e Fluxo de Financiamento</h2>
+            </div>
+            <table class="data-table" style="font-size: 8.5pt;">
+                <thead>
+                    <tr>
+                        <th style="width: 140px;">Etapa Processual</th>
+                        <th>Descrição do Marco e Condicionantes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>01. Projeto e Acesso</b></td>
+                        <td>Elaboração técnica e protocolo na Equatorial Alagoas para emissão do <b>Parecer de Acesso</b>.</td>
+                    </tr>
+                    <tr>
+                        <td><b>02. Liberação Bancária</b></td>
+                        <td>Apresentação do Parecer ao Banco para formalização do contrato e faturamento do Kit.</td>
+                    </tr>
+                    <tr>
+                        <td><b>03. Logística Belenus</b></td>
+                        <td>Separação, faturamento e transporte dos equipamentos até o local da instalação.</td>
+                    </tr>
+                    <tr>
+                        <td><b>04. Instalação Executiva</b></td>
+                        <td>Montagem estrutural e elétrica (Padrão Titanium) seguindo normas NR-10 e NR-35.</td>
+                    </tr>
+                    <tr>
+                        <td><b>05. Homologação Final</b></td>
+                        <td>Solicitação de vistoria e substituição do medidor pela Equatorial para início da compensação.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <div class="section-header">
+                <div class="section-number">05</div>
+                <h2 class="section-title">Formalização e Aceite</h2>
+            </div>
+            <div style="font-size: 8.5pt; text-align: justify; margin-bottom: 8mm; line-height: 1.5;">
+                <p>O Beneficiário declara estar ciente de que esta proposta integra o dossiê de solicitação de crédito. O início do cronograma físico está vinculado à liberação do financiamento e os prazos de homologação seguem o rito regulamentar da distribuidora local.</p>
+            </div>
+            <div class="sig-grid">
+                <div class="sig-box">
+                    <div class="sig-line"></div>
+                    <p>J. C. COSTA & CIA LTDA</p>
+                    <span style="font-size: 7.5pt;">Proponente / Tomador do Crédito</span>
+                </div>
+                <div class="sig-box">
+                    <div class="sig-line"></div>
+                    <p>JEAN MARCEL VIEIRA SILVA</p>
+                    <span style="font-size: 7.5pt;">Engenheiro Eletricista - CREA/AL 210984849-0</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div>Documento gerado em 14/04/2026 - Validade da Proposta: 05 dias úteis.</div>
+        <div>Página 02 de 02</div>
+    </footer>
+</div>
+
+</body>
+</html>

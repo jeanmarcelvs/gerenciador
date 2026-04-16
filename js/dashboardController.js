@@ -1,5 +1,5 @@
 import db from './databaseService.js';
-import { formatarMoeda, obterBadgeStatusProposta, obterBadgeStatusProjeto, obterBadgeStatusCliente, mostrarLoadingOverlay, esconderLoadingOverlay, customAlert, customConfirm, customPrompt } from './utils.js';
+import { formatarMoeda, obterBadgeStatusProposta, obterBadgeStatusProjeto, obterBadgeStatusCliente, mostrarLoadingOverlay, esconderLoadingOverlay, customAlert, customConfirm, customPrompt, abrirPropostaParaEdicao } from './utils.js';
 import { dashboardView } from './dashboardView.js';
 
 // Trava de Segurança
@@ -666,6 +666,18 @@ window.visualizarProposta = function(id) { // Mantido sync pois é só redirecio
     sessionStorage.setItem('proposta_ativa_id', id);
     // Redireciona para a página dedicada de visualização (Leitura Limpa)
     window.location.href = 'visualizar-proposta.html?id=' + id;
+};
+
+// Função para gerar Proposta Executiva Editável (HTML)
+window.gerarPDFPropostaExecutiva = function(id) {
+    const proposta = db.buscarPorId('propostas', id);
+    if (!proposta) return customAlert("Proposta não encontrada.");
+
+    const projeto = db.buscarPorId('projetos', proposta.projetoId);
+    const cliente = db.buscarPorId('clientes', proposta.clienteId);
+
+    // Usa o utilitário compartilhado
+    abrirPropostaParaEdicao(proposta, projeto, cliente);
 };
 
 window.editarProposta = function(id) { // Mantido sync
